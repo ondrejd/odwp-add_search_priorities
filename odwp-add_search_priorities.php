@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Úprava zobrazení výsledků vyhledávání
- * Plugin URI: https://github.com/ondrejd/odwp-debug_log
+ * Plugin URI: https://github.com/ondrejd/odwp-add_search_priorities
  * Description: Úprava zobrazení výsledků vyhledávání dle priority. Podporuje buď defaultní chování systému <a href="https://wordpress.org" target="blank">WordPress</a> nebo plugin <a href="https://www.relevanssi.com/" target="blank">Relevanssi</a>.
  * Version: 1.0.0
  * Author: Ondřej Doněk
@@ -9,7 +9,7 @@
  * License: GPLv3
  * Requires at least: 4.8
  * Tested up to: 4.8.4
- * Tags: debug,log,development
+ * Tags: search
  * Donate link: https://www.paypal.me/ondrejd
  *
  * Text Domain: odwpasp
@@ -17,11 +17,9 @@
  *
  * @author Ondřej Doněk <ondrejd@gmail.com>
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License 3.0
+ * @link https://github.com/ondrejd/odwp-add_search_priorities for the canonical source repository
  * @package odwp-add_search_priorities
  * @since 1.0.0
- *
- * @todo vylepšit admin. stránku "Úprava vyhledávání" - přidat Ajax.
- * @todo u editace/přidávání příspěvků/stránek musí být meta box priority
  */
 
 if( ! defined( 'ABSPATH' ) ) {
