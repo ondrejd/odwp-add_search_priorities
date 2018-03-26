@@ -401,14 +401,13 @@ endif;
 if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
     /**
      * Save meta box content.
-     * @global WP_Post $post
      * @param int $post_id
+     * @param WP_Post $post
      * @return void
      * @since 1.0.0
      * @todo Include `wponce()`!
      */
-    function odwpasp_priority_metabox_save( $post_id ) {
-        global $post;
+    function odwpasp_priority_metabox_save( $post_id, $post ) {
 
         if( !current_user_can( 'edit_post', $post_id ) ) {
             return $post_id;
@@ -429,4 +428,4 @@ if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
         return $post_id;
     }
 endif;
-add_action( 'save_post', 'odwpasp_priority_metabox_save' );
+add_action( 'save_post', 'odwpasp_priority_metabox_save', 99, 2 );
