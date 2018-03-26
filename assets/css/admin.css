@@ -4,3 +4,29 @@
  * @package odwp-add_search_priorities
  * @since 1.0.0
  */
+
+/* Admin page styles */
+.odwpasp > .card { min-width:calc(100% - 4em);max-width:calc(100% - 4em);padding:0.7em 2em 1em 2em; }
+.odwpasp .no-search-term-msg { font-size:120%;font-weight:500; }
+.odwpasp .form-container { display:table;width:100%;margin:1em 0 1em 0; }
+.odwpasp .form-container-inner { display:table-row; }
+.odwpasp .form-cell-left { display:table-cell;text-align:left;vertical-align:middle;width:50%; }
+.odwpasp .form-cell-right { display:table-cell;text-align:right;vertical-align:middle;width:50%; }
+.odwpasp .odwpasp-table { clear: both; }
+.odwpasp .odwpasp-table .col-1 { max-width:5em;min-width:5em;text-align:center;width:5em; }
+.odwpasp .odwpasp-table .col-2 { width:auto; }
+.odwpasp .odwpasp-table .col-3 { max-width:5em;min-width:5em;width:5em; }
+.odwpasp .odwpasp-table .input-priority { width:98%;max-width:5em; }
+.odwpasp .odwpasp-table .dashicons, .odwpasp .odwpasp-table .dashicons-before::before { width:15px;height:15px;font-size:17px;font-weight:200!important; }
+.odwpasp #odwpasp-search_term { height:2em; }
+
+@media only screen and (max-width:768px) {
+    .odwpasp #odwpasp-search_term { min-width:410px;padding:2px 4px;width:80%; }
+    .odwpasp #odwpasp-post_status { min-width:410px;padding:2px 4px;width:80%; }
+}
+
+@media only screen and (max-width:375px) {
+    .odwpasp .odwpasp-table .col-1 { max-width:2em;min-width:1em;width:1em; }
+    .odwpasp #odwpasp-search_term { min-width:100%;padding:2px 4px;width:100%; }
+    .odwpasp #odwpasp-post_status { min-width:100%;padding:2px 4px;width:100%; }
+}
