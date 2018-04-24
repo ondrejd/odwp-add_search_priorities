@@ -48,7 +48,9 @@ if( !function_exists( 'odwpasp_admin_enqueue_scripts' ) ) :
         if( file_exists( $js_path ) && is_readable( $js_path ) ) {
         wp_enqueue_script( 'odwpasp', plugins_url( $js_file, __FILE__ ), ['jquery'] );
             wp_localize_script( 'odwpasp', 'odwpasp', array(
-                'admin_page_url' => admin_url( 'tools.php?page=odwpasp-admin_page' )
+                'admin_page_url' => admin_url( 'tools.php?page=odwpasp-admin_page' ),
+                'no_term_msg'    => __( 'Firstly enter any search term…', 'odwpasp' ),
+                'searching_msg'  => __( 'Searching…', 'odwpasp' ),
             ) );
         }
 
@@ -84,6 +86,39 @@ endif;
 add_action( 'admin_menu', 'odwpasp_add_admin_page' );
 
 
+if( !function_exists( 'odwpasp_create_test_search_wp_query' ) ) :
+    /**
+     * Creates {@see WP_Query} for the search terms.
+     * @param string $search_term
+     * @param string $post_status Optional.
+     * @return WP_Query
+     */
+    function odwpasp_create_test_search_wp_query( $search_term, $post_status = 'published' ) {
+        $args = array(
+            's' => $search_term,
+            'post_type' => ['page', 'post'],
+            'posts_per_page' => -1,
+            'nopagination' => true,
+            'meta_key' => ODWPASP_META_KEY,
+            'orderby' => 'meta_value_num',
+            'order' => 'DESC'
+        );
+
+        if( $post_status == 'published' ) {
+            $args['post_status'] = 'publish';
+        } elseif( $post_status == 'published_drafts' ) {
+            $args['post_status'] = ['publish', 'draft'];
+        } elseif( $post_status == 'private' ) {
+            $args['post_status'] = 'private';
+        } else {
+            $args['post_status'] = 'any';
+        }
+
+        return new WP_Query( $args );
+    }
+endif;
+
+
 if( !function_exists( 'odwpasp_render_admin_page' ) ) :
     /**
      * Adds our admin page.
@@ -91,6 +126,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
      * @return void
      * @since 1.0.0
      * @uses current_user_can()
+     * @uses get_post_meta()
      * @uses sanitize_text_field()
      * @uses wp_die()
      * @uses wp_nonce_field()
@@ -123,46 +159,27 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
         }
 
         if( $submitted_search && $is_valid_nonce ) {
-            $args = array(
-                's' => $term,
-                'post_type' => ['page', 'post'],
-                'posts_per_page' => -1,
-                'nopagination' => true,
-                'meta_key' => ODWPASP_META_KEY,
-                'orderby' => 'meta_value_num',
-                'order' => 'DESC'
-            );
-
-            if( $post_status == 'published' ) {
-                $args['post_status'] = 'publish';
-            } elseif( $post_status == 'published_drafts' ) {
-                $args['post_status'] = ['publish', 'draft'];
-            } elseif( $post_status == 'private' ) {
-                $args['post_status'] = 'private';
-            } else {
-                $args['post_status'] = 'any';
-            }
-
-            $query = new WP_Query( $args );
+            $query = odwpasp_create_test_search_wp_query( $term );
+            $results = odwpasp_process_test_search_wp_query( $query );
         }
 
 ?>
-<div class="wrap odwpasp">
+<div id="odwpasp-admin_page" class="wrap odwpasp">
     <h1 class="wp-heading-inline"><?php _e( 'Customize search results order', 'odwpasp' ) ?></h1>
     <hr class="wp-header-end">
     <?php if( ( $submitted_priorities || $submitted_search ) && !$is_valid_nonce ) : ?>
     <div class="notice notice-error s-dismissible">
-        <p><?php _e( 'Request was not processed correctly, something wrong with security&hellip;', 'odwpasp' ) ?></p>
+        <p><?php _e( 'Request was not processed correctly, something wrong with security…', 'odwpasp' ) ?></p>
     </div>
     <?php endif ?>
-    <div class="card">
+    <div id="odwpasp-test_search_form_card" class="card">
         <h2 class="title"><?php _e( 'Test search', 'odwpasp' ) ?></h2>
-        <form action="" method="GET">
+        <form action="" id="odwpasp-test_search_form" method="GET">
             <input type="hidden" name="page" value="<?php echo ODWPASP_ADMIN_PAGE ?>">
             <?php wp_nonce_field( 'odwpasp_nonce' ) ?>
             <span class="inline-input">
                 <label for="odwpasp-search_term"><?php _e( 'Search term: ', 'odwpasp' ) ?></label>
-                <input class="regular-text" id="odwpasp-search_term" name="term" type="text" value="<?php esc_attr( $term ) ?>">
+                <input class="regular-text" id="odwpasp-search_term" name="term" type="text" value="<?php echo esc_attr( $term ) ?>" placeholder="<?php esc_attr_e( 'Enter search term...', 'odwpasp' ) ?>">
             </span>
             <span class="inline-input">
                 <label for="odwpasp-post_status"><?php _e( 'Post status: ', 'odwpasp' ) ?></label>
@@ -179,15 +196,15 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
     </div>
     <?php if( !$submitted_search ) : ?>
     <div class="card">
-        <p class="no-search-term-msg"><?php _e( 'Firstly enter any search term&hellip;', 'odwpasp' ) ?></p>
+        <p class="no-search-term-msg"><?php _e( 'Firstly enter any search term…', 'odwpasp' ) ?></p>
     </div>
     <?php else : ?>
-    <?php if( !$query->have_posts() ) : ?>
+    <?php if( count( $results ) == 0 ) : ?>
     <div class="card">
-        <p class="no-search-results-msg"><?php _e( 'No posts or pages found&hellip;', 'odwpasp' ) ?></p>
+        <p class="no-search-results-msg"><?php _e( 'No posts or pages found…', 'odwpasp' ) ?></p>
     </div>
-    <?php else : $i = 0; ?>
-    <form action="" method="POST">
+    <?php else : ?>
+    <form id="odwpasp-results_table_form" action="" method="POST">
         <input type="hidden" name="page" value="<?php echo ODWPASP_ADMIN_PAGE ?>">
         <input type="hidden" name="term" value="<?php echo $term ?>">
         <?php wp_nonce_field( 'odwpasp_nonce' ) ?>
@@ -203,38 +220,35 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
         </div>
         <table class="widefat fixed striped odwpasp-table">
             <thead>
-                <th class="col-1"><?php _e( 'I.', 'odwpasp' ) ?></th>
+                <th class="col-1"><?php _e( 'Index', 'odwpasp' ) ?></th>
                 <th class="col-2 column-primary"><?php _e( 'Search result', 'odwpasp' ) ?></th>
                 <th class="col-3"><?php _e( 'Priority', 'odwpasp' ) ?></th>
             </thead>
-            <tbody>
-            <?php while ( $query->have_posts() ) :
-                $i++;
-                $query->the_post();
-                $pid = get_the_ID();
-                $val = (int) get_post_meta( $pid, ODWPASP_META_KEY, true );
-            ?>  <tr>
-                    <th class="col-1" scope="row"><?php echo $i ?></th>
-                    <td class="col-2 column-primary">
-                        <?php if( $post_status == 'publish' || $post_status == 'private' ) : ?>
-                        <?php printf(
-                            __( '<b>%1$s</b> [ID: <code>%2$d</code> | Type: <em>%3$s</em> | <a href="%4$s" target="blank">Show <span class="dashicons dashicons-external"></span></a>]', 'odwpasp' ),
-                            get_the_title(), $pid, get_post_type(), esc_url( get_permalink( get_page_by_title( $pid ) ) )
-                        ) ?>
-                        <?php else: ?>
-                        <?php printf(
-                            __( '<b>%1$s</b> [ID: <code>%2$d</code> | Type: <em>%3$s</em> | Status: <em>%4$s</em> | <a href="%5$s" target="blank">Show <span class="dashicons dashicons-external"></span></a>]', 'odwpasp' ),
-                            get_the_title(), $pid, get_post_type(), get_post_status(), esc_url( get_permalink( get_page_by_title( $pid ) ) )
-                        ) ?>
-                        <?php endif ?>
-                    </td>
-                    <td class="col-3">
-                        <input type="text" name="p[<?php echo $pid ?>]" class="small-text" value="<?php esc_attr_e( $val ) ?>" class="input-priority">
-                    </td>
-                </tr>
-            <?php endwhile ?>
-            <?php wp_reset_postdata() ?>
-            </tbody>
+            <tbody><?php
+            for( $i = 0; $i < count( $results ); $i++ ) {
+                $result = $results[$i];
+                $status = sprintf( '%1$s: <em>%2$s</em> | ', __( 'Status', 'odwpasp' ), $result['status'] );
+                $primary = sprintf(
+                    '<b>%1$s</b> [%2$s: <code>%3$d</code> | %4$s: <em>%5$s</em> | %6$s<a href="%7$s" target="blank">%8$s <span class="dashicons dashicons-external"></span></a>]',
+                    $result['title'],
+                    __( 'ID', 'odwpasp' ),
+                    $result['post_ID'],
+                    __( 'Type', 'odwpasp' ),
+                    $result['type'],
+                    ( $result['status'] == 'publish' || $result['status'] == 'private' ) ? '' : $status,
+                    esc_url( get_page_by_title( $pid ) ),
+                    __( 'Show', 'odwpasp' )
+                );
+
+                echo <<<EOC
+<tr>
+    <th class="col-1" scope="row">{$result['idx']}</th>
+    <td class="col-2 column-primary">$primary</td>
+    <td class="col-3"><input type="text" name="p[{$result['post_ID']}]" class="small-text" value="{$result['priority']}" class="input-priority"></td>
+</tr>
+EOC;
+            }
+            ?></tbody>
         </table>
         <p>
             <input type="submit" id="odwpasp-priorities_submit" name="submit_priorities" value="<?php esc_attr_e( 'Save priorities', 'odwpasp' ) ?>" class="button button-primary">
@@ -482,3 +496,79 @@ if( !function_exists( 'odwpasp_load_textdomain' ) ) :
     }
 endif;
 add_action( 'plugins_loaded', 'odwpasp_load_textdomain' );
+
+
+if( !function_exists( 'odwpasp_ajax_test_search_action' ) ) :
+    /**
+     * Process Ajax call for test search.
+     * @return void
+     * @since 1.1.0
+     * @todo Use NONCE!
+     * @uses get_permalink()
+     * @uses get_post_meta()
+     * @uses get_post_type()
+     * @uses get_post_status()
+     * @uses get_the_title()
+     * @uses sanitize_text_field()
+     * @uses wp_die()
+     * @uses wp_json_encode()
+     * @uses wp_reset_postdata()
+     */
+    function odwpasp_ajax_test_search_action() {
+        $term = sanitize_text_field( $_POST['search_term'] );
+        $query = odwpasp_create_test_search_wp_query( $term );
+        $out = array(
+            'message' => null,
+            'error' => false,
+            'items' => array(),
+        );
+
+        if( !( $query instanceof \WP_Query ) ) {
+            $out['message'] = __( 'Firstly enter any search term…', 'odwpasp' );
+            $out['error'] = true;
+        } else {
+            if( !$query->have_posts() ) {
+                $out['message'] = __( 'No posts or pages found…', 'odwpasp' );
+            } else {
+                $out['items'] = odwpasp_process_test_search_wp_query( $query );
+            }
+        }
+
+        echo wp_json_encode( $out );
+        wp_die();
+    }
+endif;
+add_action( 'wp_ajax_odwpasp_test_search', 'odwpasp_ajax_test_search_action' );
+
+
+if( !function_exists( 'odwpasp_process_test_search_wp_query' ) ) :
+    /**
+     * Process given {@see WP_Query} and returns array of results (or empty array).
+     * @param \WP_Query $query
+     * @return array
+     * @since 1.1.0
+     */
+    function odwpasp_process_test_search_wp_query( \WP_Query $query ) {
+        $out = array();
+        $i = 0;
+
+        while( $query->have_posts() ) {
+            $i++;
+            $query->the_post();
+            $pid = get_the_ID();
+            $val = (int) get_post_meta( $pid, ODWPASP_META_KEY, true );
+            $out[] = array(
+                'idx'       => $i,
+                'title'     => get_the_title(),
+                'post_ID'   => $pid,
+                'type'      => get_post_type(),
+                'status'    => get_post_status(),
+                'permalink' => esc_url( get_permalink( $pid ) ),
+                'priority'  => $val,
+            );
+            wp_reset_postdata();
+        }
+
+        return $out;
+    }
+endif;
