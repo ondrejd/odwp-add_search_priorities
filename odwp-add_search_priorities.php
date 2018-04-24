@@ -90,7 +90,6 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
      * @link https://wpdreams.gitbooks.io/ajax-search-pro-documentation/content/priority_settings/individual-priorities.html - ukázka řešení
      * @return void
      * @since 1.0.0
-     * @todo Remove all inline styles and move them into proper CSS file!
      * @uses current_user_can()
      * @uses sanitize_text_field()
      * @uses wp_die()
@@ -157,7 +156,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
     </div>
     <?php endif ?>
     <div class="card">
-        <h2 class="title" style="margin-bottom:0;"><?php _e( 'Test search', 'odwpasp' ) ?></h2>
+        <h2 class="title"><?php _e( 'Test search', 'odwpasp' ) ?></h2>
         <form action="" method="GET">
             <input type="hidden" name="page" value="<?php echo ODWPASP_ADMIN_PAGE ?>">
             <?php wp_nonce_field( 'odwpasp_nonce' ) ?>
@@ -215,8 +214,8 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
                 $pid = get_the_ID();
                 $val = (int) get_post_meta( $pid, ODWPASP_META_KEY, true );
             ?>  <tr>
-                    <th class="" scope="row" style="text-align:center;"><?php echo $i ?></th>
-                    <td class="column-primary">
+                    <th class="col-1" scope="row"><?php echo $i ?></th>
+                    <td class="col-2 column-primary">
                         <?php if( $post_status == 'publish' || $post_status == 'private' ) : ?>
                         <?php printf(
                             __( '<b>%1$s</b> [ID: <code>%2$d</code> | Type: <em>%3$s</em> | <a href="%4$s" target="blank">Show <span class="dashicons dashicons-external"></span></a>]', 'odwpasp' ),
@@ -229,7 +228,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
                         ) ?>
                         <?php endif ?>
                     </td>
-                    <td>
+                    <td class="col-3">
                         <input type="text" name="p[<?php echo $pid ?>]" class="small-text" value="<?php esc_attr_e( $val ) ?>" class="input-priority">
                     </td>
                 </tr>
