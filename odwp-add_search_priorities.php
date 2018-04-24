@@ -1,15 +1,15 @@
 <?php
 /**
- * Plugin Name: Úprava zobrazení výsledků vyhledávání
+ * Plugin Name: Customize search results order
  * Plugin URI: https://github.com/ondrejd/odwp-add_search_priorities
- * Description: Úprava zobrazení výsledků vyhledávání dle priority. Podporuje buď defaultní chování systému <a href="https://wordpress.org" target="blank">WordPress</a> nebo plugin <a href="https://www.relevanssi.com/" target="blank">Relevanssi</a>.
- * Version: 1.0.0
+ * Description: Plugin which customizes order of search results by additional priority value. It supports plain <a href="https://wordpress.org" target="blank">WordPress</a> as well as plugin <a href="https://www.relevanssi.com/" target="blank">Relevanssi</a>.
+ * Version: 1.1.0
  * Author: Ondřej Doněk
  * Author URI: https://ondrejd.com/
  * License: GPLv3
  * Requires at least: 4.8
- * Tested up to: 4.8.4
- * Tags: search
+ * Tested up to: 4.8.5
+ * Tags: search,meta box
  * Donate link: https://www.paypal.me/ondrejd
  * Text Domain: odwpasp
  * Domain Path: /languages/
@@ -67,8 +67,8 @@ if( !function_exists( 'odwpasp_add_admin_page' ) ) :
     function odwpasp_add_admin_page() {
         add_submenu_page(
             'tools.php',
-            __( 'Úprava vyhledávání dle priority', 'odwpasp' ),
-            __( 'Úprava vyhledávání', 'odwpasp' ),
+            __( 'Customize search results order', 'odwpasp' ),
+            __( 'Customize search', 'odwpasp' ),
             'manage_options',
             ODWPASP_ADMIN_PAGE,
             'odwpasp_render_admin_page'
@@ -84,10 +84,13 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
      * @link https://wpdreams.gitbooks.io/ajax-search-pro-documentation/content/priority_settings/individual-priorities.html - ukázka řešení
      * @return void
      * @since 1.0.0
+     * @todo Add _NONCE field!
+     * @todo Sanitize search term from GET/POST!
+     * @todo Remove all inline styles and move them into proper CSS file!
      */
     function odwpasp_render_admin_page() {
         if ( !current_user_can( 'manage_options' ) )  {
-            wp_die( __( 'Nemáte dostatečná oprávnění pro přístup k této stránce.', 'odwpasp' ) );
+            wp_die( __( 'You have incuffient permissions for accessing this page.', 'odwpasp' ) );
         }
 
         $term = isset( $_GET['term'] ) ? $_GET['term'] : ( isset( $_POST['term'] ) ? $_POST['term'] : '' );
@@ -128,37 +131,37 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
 
 ?>
 <div class="wrap odwpasp">
-    <h1 class="wp-heading-inline"><?php _e( 'Úprava vyhledávání dle priority', 'odwpasp' ) ?></h1>
+    <h1 class="wp-heading-inline"><?php _e( 'Customize search results order', 'odwpasp' ) ?></h1>
     <hr class="wp-header-end">
     <div class="card">
-        <h2 class="title" style="margin-bottom:0;"><?php _e( 'Zkušební vyhledávání', 'odwpasp' ) ?></h2>
+        <h2 class="title" style="margin-bottom:0;"><?php _e( 'Test search', 'odwpasp' ) ?></h2>
         <form action="" method="GET">
             <input type="hidden" name="page" value="<?php echo ODWPASP_ADMIN_PAGE ?>">
             <span class="inline-input">
-                <label for="odwpasp-search_term"><?php _e( 'Hledaný termín: ', 'odwpasp' ) ?></label>
-                <input class="regular-text" id="odwpasp-search_term" name="term" type="text" value="<?php echo $term ?>">
+                <label for="odwpasp-search_term"><?php _e( 'Search term: ', 'odwpasp' ) ?></label>
+                <input class="regular-text" id="odwpasp-search_term" name="term" type="text" value="<?php esc_attr( $term ) ?>">
             </span>
             <span class="inline-input">
-                <label for="odwpasp-post_status"><?php _e( 'Stav příspěvků: ', 'odwpasp' ) ?></label>
+                <label for="odwpasp-post_status"><?php _e( 'Post status: ', 'odwpasp' ) ?></label>
                 <select class="" id="odwpasp-post_status" name="post_status" type="text" value="<?php echo $post_status ?>">
-                    <option value="published" <?php selected( $post_status, 'published' ) ?>><?php _e( 'Pouze publikované', 'odwpasp' ) ?></option>
-                    <option value="published_drafts" <?php selected( $post_status, 'published_drafts' ) ?>><?php _e( 'Publikované + Koncepty', 'odwpasp' ) ?></option>
-                    <option value="private" <?php selected( $post_status, 'private' ) ?>><?php _e( 'Soukromé', 'odwpasp' ) ?></option>
-                    <option value="all" <?php selected( $post_status, 'all' ) ?>><?php _e( 'Všechny', 'odwpasp' ) ?></option>
+                    <option value="published" <?php selected( $post_status, 'published' ) ?>><?php _e( 'Published only', 'odwpasp' ) ?></option>
+                    <option value="published_drafts" <?php selected( $post_status, 'published_drafts' ) ?>><?php _e( 'Published + Drafts', 'odwpasp' ) ?></option>
+                    <option value="private" <?php selected( $post_status, 'private' ) ?>><?php _e( 'Private', 'odwpasp' ) ?></option>
+                    <option value="all" <?php selected( $post_status, 'all' ) ?>><?php _e( 'All', 'odwpasp' ) ?></option>
                 </select>
             </span>
-            <input id="odwpasp-search_submit_btn" name="submit_search" type="submit" value="<?php _e( 'Hledej', 'odwpasp' ) ?>" class="button button-primary">
-            <span id="odwpasp-search_cancel_btn" href="<?php echo admin_url( 'tools.php?page=odwpasp-admin_page' ) ?>" class="button button-secondary"><?php _e( 'Zruš', 'odwpasp' ) ?></a>
+            <input id="odwpasp-search_submit_btn" name="submit_search" type="submit" value="<?php esc_attr_e( 'Search', 'odwpasp' ) ?>" class="button button-primary">
+            <span id="odwpasp-search_cancel_btn" href="<?php echo admin_url( 'tools.php?page=odwpasp-admin_page' ) ?>" class="button button-secondary"><?php _e( 'Cancel', 'odwpasp' ) ?></a>
         </form>
     </div>
     <?php if( !$submitted_search ) : ?>
     <div class="card">
-        <p class="no-search-term-msg"><?php _e( 'Nejprve musíte zadat hledaný termín&hellip;', 'odwpasp' ) ?></p>
+        <p class="no-search-term-msg"><?php _e( 'Firstly enter any search term&hellip;', 'odwpasp' ) ?></p>
     </div>
     <?php else : ?>
     <?php if( !$query->have_posts() ) : ?>
     <div class="card">
-        <p class="no-search-results-msg"><?php _e( 'Žádné stránky či příspěvky neodpovídají vašemu zadání&hellip;', 'odwpasp' ) ?></p>
+        <p class="no-search-results-msg"><?php _e( 'No posts or pages found&hellip;', 'odwpasp' ) ?></p>
     </div>
     <?php else : $i = 0; ?>
     <form action="" method="POST">
@@ -167,18 +170,18 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
         <div class="form-container">
             <div class="form-container-inner">
                 <div class="form-cell-left">
-                    <input type="submit" id="odwpasp-priorities_submit" name="submit_priorities" value="<?php _e( 'Uložit nastavení priorit', 'odwpasp' ) ?>" class="button button-primary">
+                    <input type="submit" id="odwpasp-priorities_submit" name="submit_priorities" value="<?php esc_attr_e( 'Save priorities', 'odwpasp' ) ?>" class="button button-primary">
                 </div>
                 <div class="form-cell-right">
-                    <?php printf( __( 'Počet výsledků: %1$d', 'odwpasp' ), $query->post_count ) ?>
+                    <?php printf( __( 'Results count: %1$d', 'odwpasp' ), $query->post_count ) ?>
                 </div>
             </div>
         </div>
         <table class="widefat fixed striped odwpasp-table">
             <thead>
-                <th class="col-1" style=""><?php _e( 'P.', 'odwpasp' ) ?></th>
-                <th class="col-2 column-primary" style=""><?php _e( 'Výsledek vyhledávání', 'odwpasp' ) ?></th>
-                <th class="col-3" style=""><?php _e( 'Priorita', 'odwpasp' ) ?></th>
+                <th class="col-1"><?php _e( 'I.', 'odwpasp' ) ?></th>
+                <th class="col-2 column-primary"><?php _e( 'Search result', 'odwpasp' ) ?></th>
+                <th class="col-3"><?php _e( 'Priority', 'odwpasp' ) ?></th>
             </thead>
             <tbody>
             <?php while ( $query->have_posts() ) :
@@ -191,18 +194,18 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
                     <td class="column-primary">
                         <?php if( $post_status == 'publish' || $post_status == 'private' ) : ?>
                         <?php printf(
-                            __( '<b>%1$s</b> [ID: <code>%2$d</code> | Typ: <em>%3$s</em> | <a href="%4$s" target="blank">Zobrazit <span class="dashicons dashicons-external"></span></a>]', 'odwpasp' ),
+                            __( '<b>%1$s</b> [ID: <code>%2$d</code> | Type: <em>%3$s</em> | <a href="%4$s" target="blank">Show <span class="dashicons dashicons-external"></span></a>]', 'odwpasp' ),
                             get_the_title(), $pid, get_post_type(), esc_url( get_permalink( get_page_by_title( $pid ) ) )
                         ) ?>
                         <?php else: ?>
                         <?php printf(
-                            __( '<b>%1$s</b> [ID: <code>%2$d</code> | Typ: <em>%3$s</em> | Stav: <em>%4$s</em> | <a href="%5$s" target="blank">Zobrazit <span class="dashicons dashicons-external"></span></a>]', 'odwpasp' ),
+                            __( '<b>%1$s</b> [ID: <code>%2$d</code> | Type: <em>%3$s</em> | Status: <em>%4$s</em> | <a href="%5$s" target="blank">Show <span class="dashicons dashicons-external"></span></a>]', 'odwpasp' ),
                             get_the_title(), $pid, get_post_type(), get_post_status(), esc_url( get_permalink( get_page_by_title( $pid ) ) )
                         ) ?>
                         <?php endif ?>
                     </td>
                     <td>
-                        <input type="text" name="p[<?php echo $pid ?>]" class="small-text" value="<?php echo $val ?>" class="input-priority">
+                        <input type="text" name="p[<?php echo $pid ?>]" class="small-text" value="<?php esc_attr_e( $val ) ?>" class="input-priority">
                     </td>
                 </tr>
             <?php endwhile ?>
@@ -210,7 +213,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
             </tbody>
         </table>
         <p>
-            <input type="submit" id="odwpasp-priorities_submit" name="submit_priorities" value="<?php _e( 'Uložit nastavení priorit', 'odwpasp' ) ?>" class="button button-primary">
+            <input type="submit" id="odwpasp-priorities_submit" name="submit_priorities" value="<?php esc_attr_e( 'Save priorities', 'odwpasp' ) ?>" class="button button-primary">
         </p>
     </form>
     <?php endif ?>
@@ -259,7 +262,6 @@ if( !function_exists( 'odwpasp_relevanssi_modify_wp_query' ) ) :
         global $odwpasp_priority_sort;
 
         if( isset( $q->query_vars['meta_key'] ) && $q->query_vars['meta_key'] == ODWPASP_META_KEY ) {
-            //$q->query_vars['meta_key'] = '';
             $odwpasp_priority_sort = strtolower( $q->query_vars['order'] );
         }
 
@@ -277,7 +279,7 @@ if( !function_exists( 'odwpasp_pre_get_posts' ) ) :
      * @since 1.0.0
      */
     function odwpasp_pre_get_posts( $q ) {
-        if( !is_admin() && $q->is_main_query() /*&& !function_exists( 'relevanssi_do_query' )*/ ) {
+        if( !is_admin() && $q->is_main_query() ) {
             if( is_search() || $q->is_post_type_archive( ['page', 'post'] ) ) {
                 $q->set( 'orderby', 'meta_value_num' );
                 $q->set( 'order', 'DESC' );
@@ -363,7 +365,7 @@ if( !function_exists( 'odwpasp_register_meta_boxes' ) ) :
     function odwpasp_register_meta_boxes() {
         add_meta_box(
             'odwpasp-priority_metabox',
-            __( 'Priorita ve vyhledávání', 'odwpasp' ),
+            __( 'Search order priority', 'odwpasp' ),
             'odwpasp_priority_metabox_render',
             ['page', 'post'], 'side', 'high'
         );
@@ -384,8 +386,8 @@ if( !function_exists( 'odwpasp_priority_metabox_render' ) ) :
         $priority = get_post_meta( $post->ID, ODWPASP_META_KEY, true );
 ?>
 <p>
-    <label for="odwpasp-priority"><?php _e( 'Priorita:', 'odwpasp' ) ?></label>
-    <input class="short-text" id="odwpasp-priority" name="odwpasp-priority" type="text" value="<?php echo $priority ?>">
+    <label for="odwpasp-priority"><?php _e( 'Priority:', 'odwpasp' ) ?></label>
+    <input class="short-text" id="odwpasp-priority" name="odwpasp-priority" type="text" value="<?php esc_attr( $priority ) ?>">
 </p>
 <?php
     }

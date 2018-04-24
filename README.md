@@ -1,8 +1,8 @@
-# Customization of search results priorities
+# Customize search results order
 
 _Českou verzi najdete zde [README.cs.md][4]._
 
-[WordPress][1] plugin which customizes ordering of search results by additional priority value. It supports plain [WordPress][1] as well as plugin [Relevanssi][2].
+[WordPress][1] plugin which customizes order of search results by additional priority value. It supports plain [WordPress][1] as well as plugin [Relevanssi][2].
 
 The main part of the plugin is new administration page (__Admin__ -> __Tools__ -> __Search priorities__) where you can set priority to single pages or posts. Items with higher priority will be shown on top of search results listing.
 
