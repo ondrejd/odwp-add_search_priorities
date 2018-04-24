@@ -11,7 +11,6 @@
  * Tested up to: 4.8.4
  * Tags: search
  * Donate link: https://www.paypal.me/ondrejd
- *
  * Text Domain: odwpasp
  * Domain Path: /languages/
  *
@@ -171,7 +170,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
                     <input type="submit" id="odwpasp-priorities_submit" name="submit_priorities" value="<?php _e( 'Uložit nastavení priorit', 'odwpasp' ) ?>" class="button button-primary">
                 </div>
                 <div class="form-cell-right">
-                    <?php printf( __( 'Počet výsledků: %d', 'odwpasp' ), $query->post_count ) ?>
+                    <?php printf( __( 'Počet výsledků: %1$d', 'odwpasp' ), $query->post_count ) ?>
                 </div>
             </div>
         </div>
@@ -239,12 +238,8 @@ if( !function_exists( 'odwpasp_add_meta_to_all_posts' ) ) :
         while ( $query->have_posts() ) {
             $query->the_post();
             $pid = get_the_ID();
+
             update_post_meta( $pid, ODWPASP_META_KEY, 0 );
-
-            if( function_exists( 'odwpdl_write_log' ) ) {
-                odwpdl_write_log( "Updated [$pid]=>'" . get_post_type() . "'" );
-            }
-
             wp_reset_postdata();
         }
     }
@@ -352,7 +347,6 @@ if( !function_exists( 'odwpasp_add_query_var' ) ) :
      * @since 1.0.0
      */
     function odwpasp_add_query_var( $query_vars ) {
-        //echo '<!-- odwpasp_add_query_var="' . print_r( $query_vars, true ) . '" -->'.PHP_EOL;
         $query_vars[] = ODWPASP_META_KEY;
         return $query_vars;
     }
@@ -371,7 +365,7 @@ if( !function_exists( 'odwpasp_register_meta_boxes' ) ) :
             'odwpasp-priority_metabox',
             __( 'Priorita ve vyhledávání', 'odwpasp' ),
             'odwpasp_priority_metabox_render',
-            ['page', 'post'], 'normal', 'default'
+            ['page', 'post'], 'side', 'high'
         );
     }
 endif;
@@ -429,3 +423,19 @@ if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
     }
 endif;
 add_action( 'save_post', 'odwpasp_priority_metabox_save', 99, 2 );
+
+
+if( !function_exists( 'odwpasp_load_textdomain' ) ) :
+    /**
+     * Load plugin's localization.
+     * @link https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/
+     * @param int $post_id
+     * @param WP_Post $post
+     * @return void
+     * @since 1.0.0
+     */
+    function odwpasp_load_textdomain() {
+        load_plugin_textdomain( 'odwpasp', false, 'odwp-add_search_priorities/languages/' );
+    }
+endif;
+add_action( 'plugins_loaded', 'odwpasp_load_textdomain' );
