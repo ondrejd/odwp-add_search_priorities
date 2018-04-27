@@ -8,7 +8,7 @@
  * Author URI: https://ondrejd.com/
  * License: GPLv3
  * Requires at least: 4.8
- * Tested up to: 4.8.5
+ * Tested up to: 4.9.5
  * Tags: search,meta box
  * Donate link: https://www.paypal.me/ondrejd
  * Text Domain: odwpasp
@@ -105,11 +105,11 @@ if( !function_exists( 'odwpasp_create_test_search_wp_query' ) ) :
         );
 
         if( $post_status == 'published' ) {
-            $args['post_status'] = 'publish';
+            $args['post_status'] = ['publish'];
         } elseif( $post_status == 'published_drafts' ) {
-            $args['post_status'] = ['publish', 'draft'];
+            $args['post_status'] = ['publish', 'auto-draft', 'draft'];
         } elseif( $post_status == 'private' ) {
-            $args['post_status'] = 'private';
+            $args['post_status'] = ['private'];
         } else {
             $args['post_status'] = 'any';
         }
@@ -159,7 +159,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
         }
 
         if( $submitted_search && $is_valid_nonce ) {
-            $query = odwpasp_create_test_search_wp_query( $term );
+            $query = odwpasp_create_test_search_wp_query( $term, $post_status );
             $results = odwpasp_process_test_search_wp_query( $query );
         }
 
@@ -183,7 +183,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
             </span>
             <span class="inline-input">
                 <label for="odwpasp-post_status"><?php _e( 'Post status: ', 'odwpasp' ) ?></label>
-                <select class="" id="odwpasp-post_status" name="post_status" type="text" value="<?php echo $post_status ?>">
+                <select id="odwpasp-post_status" name="post_status" type="text" value="<?php echo $post_status ?>">
                     <option value="published" <?php selected( $post_status, 'published' ) ?>><?php _e( 'Published only', 'odwpasp' ) ?></option>
                     <option value="published_drafts" <?php selected( $post_status, 'published_drafts' ) ?>><?php _e( 'Published + Drafts', 'odwpasp' ) ?></option>
                     <option value="private" <?php selected( $post_status, 'private' ) ?>><?php _e( 'Private', 'odwpasp' ) ?></option>
