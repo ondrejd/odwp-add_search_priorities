@@ -27,6 +27,7 @@ if( ! defined( 'ABSPATH' ) ) {
 
 defined( 'ODWPASP_ADMIN_PAGE' ) || define( 'ODWPASP_ADMIN_PAGE', 'odwpasp-admin_page' );
 defined( 'ODWPASP_META_KEY' ) || define( 'ODWPASP_META_KEY', 'odwpasp-priority' );
+defined( 'ODWPASP_NONCE' ) || define( 'ODWPASP_NONCE', 'odwpasp_nonce' );
 defined( 'ODWPASP_FILE' ) || define( 'ODWPASP_FILE', basename( __FILE__ ) );
 
 
@@ -36,7 +37,9 @@ if( !function_exists( 'odwpasp_admin_enqueue_scripts' ) ) :
      * @param string $hook
      * @return void
      * @since 1.0.0
+     * @uses admin_url()
      * @uses plugins_url()
+     * @uses wp_create_nonce()
      * @uses wp_enqueue_script()
      * @uses wp_enqueue_style()
      * @uses wp_localize_script()
@@ -48,9 +51,21 @@ if( !function_exists( 'odwpasp_admin_enqueue_scripts' ) ) :
         if( file_exists( $js_path ) && is_readable( $js_path ) ) {
         wp_enqueue_script( 'odwpasp', plugins_url( $js_file, __FILE__ ), ['jquery'] );
             wp_localize_script( 'odwpasp', 'odwpasp', array(
-                'admin_page_url' => admin_url( 'tools.php?page=odwpasp-admin_page' ),
-                'no_term_msg'    => __( 'Firstly enter any search term…', 'odwpasp' ),
-                'searching_msg'  => __( 'Searching…', 'odwpasp' ),
+                'admin_page'      => ODWPASP_ADMIN_PAGE,
+                'admin_page_url'  => admin_url( 'tools.php?page=' . ODWPASP_ADMIN_PAGE ),
+                'nonce'           => wp_create_nonce( ODWPASP_NONCE ),
+                'no_term_msg'     => __( 'Firstly enter any search term…', 'odwpasp' ),
+                'searching_msg'   => __( 'Searching…', 'odwpasp' ),
+                'ajax_error_msg'  => __( 'There was an error so search can not be completed…', 'odwpasp' ),
+                'saveprior_btn'   => __( 'Save priorities', 'odwpasp' ),
+                'results_count'   => __( 'Results count: %1$d', 'odwpasp' ),
+                'table_col_index' => __( 'Index', 'odwpasp' ),
+                'table_col_prim'  => __( 'Search result', 'odwpasp' ),
+                'table_col_prior' => __( 'Priority', 'odwpasp' ),
+                'status_text'     => __( 'Status', 'odwpasp' ),
+                'id_text'         => __( 'ID', 'odwpasp' ),
+                'type_text'       => __( 'Type', 'odwpasp' ),
+                'show_text'       => __( 'Show', 'odwpasp' ),
             ) );
         }
 
@@ -91,13 +106,14 @@ if( !function_exists( 'odwpasp_create_test_search_wp_query' ) ) :
      * Creates {@see WP_Query} for the search terms.
      * @param string $search_term
      * @param string $post_status Optional.
+     * @param integer $display_rows Optional.
      * @return WP_Query
      */
-    function odwpasp_create_test_search_wp_query( $search_term, $post_status = 'published' ) {
+    function odwpasp_create_test_search_wp_query( $search_term, $post_status = 'published', $display_rows = -1 ) {
         $args = array(
             's' => $search_term,
             'post_type' => ['page', 'post'],
-            'posts_per_page' => -1,
+            'posts_per_page' => $display_rows,
             'nopagination' => true,
             'meta_key' => ODWPASP_META_KEY,
             'orderby' => 'meta_value_num',
@@ -138,26 +154,24 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
             wp_die( __( 'You have incuffient permissions for accessing this page.', 'odwpasp' ) );
         }
 
-        $term = isset( $_GET['term'] ) ? sanitize_text_field( $_GET['term'] ) : ( isset( $_POST['term'] ) ? sanitize_text_field( $_POST['term'] ) : '' );
-        $post_status = isset( $_GET['post_status'] ) ? $_GET['post_status'] : ( isset( $_POST['post_status'] ) ? $_POST['post_status'] : '' );
+        $nonce_new = wp_create_nonce( ODWPASP_NONCE );
+        $nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : null;
+        $term = isset( $_POST['search_term'] ) ? sanitize_text_field( $_POST['search_term'] ) : null;
+        $post_status = isset( $_POST['post_status'] ) ? $_POST['post_status'] : null;
+        $rows_count = isset( $_POST['rows_count'] ) ? ( ( $_POST['rows_count'] == '-1' ) ? -1 : intval( $_POST['rows_count'] ) ) : -1;
         $submitted_priorities = isset( $_POST['submit_priorities'] );
-        $submitted_search = ( isset( $_GET['submit_search'] ) || $submitted_priorities );
-        $is_valid_nonce = false;
+        $submitted_search = ( isset( $_POST['submit_search'] ) || $submitted_priorities );
+        $is_valid_nonce = wp_verify_nonce( $nonce, ODWPASP_NONCE );
         $query = null;
-
-        if( $submitted_priorities ) {
-            $is_valid_nonce = ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'odwpasp_nonce' ) );
-        }
-        elseif( $submitted_search ) {
-            $is_valid_nonce = ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'odwpasp_nonce' ) );
-        }
         
+        // Update submitted priorities
         if( $submitted_priorities && $is_valid_nonce ) {
             foreach( $_POST['p'] as $id => $v ) {
                 update_post_meta( $id, ODWPASP_META_KEY, $v );
             }
         }
 
+        // Search is submitted
         if( $submitted_search && $is_valid_nonce ) {
             $query = odwpasp_create_test_search_wp_query( $term, $post_status );
             $results = odwpasp_process_test_search_wp_query( $query );
@@ -174,40 +188,55 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
     <?php endif ?>
     <div id="odwpasp-test_search_form_card" class="card">
         <h2 class="title"><?php _e( 'Test search', 'odwpasp' ) ?></h2>
-        <form action="" id="odwpasp-test_search_form" method="GET">
+        <form action="" id="odwpasp-test_search_form" method="POST">
             <input type="hidden" name="page" value="<?php echo ODWPASP_ADMIN_PAGE ?>">
-            <?php wp_nonce_field( 'odwpasp_nonce' ) ?>
-            <span class="inline-input">
-                <label for="odwpasp-search_term"><?php _e( 'Search term: ', 'odwpasp' ) ?></label>
-                <input class="regular-text" id="odwpasp-search_term" name="term" type="text" value="<?php echo esc_attr( $term ) ?>" placeholder="<?php esc_attr_e( 'Enter search term...', 'odwpasp' ) ?>">
-            </span>
-            <span class="inline-input">
-                <label for="odwpasp-post_status"><?php _e( 'Post status: ', 'odwpasp' ) ?></label>
-                <select id="odwpasp-post_status" name="post_status" type="text" value="<?php echo $post_status ?>">
-                    <option value="published" <?php selected( $post_status, 'published' ) ?>><?php _e( 'Published only', 'odwpasp' ) ?></option>
-                    <option value="published_drafts" <?php selected( $post_status, 'published_drafts' ) ?>><?php _e( 'Published + Drafts', 'odwpasp' ) ?></option>
-                    <option value="private" <?php selected( $post_status, 'private' ) ?>><?php _e( 'Private', 'odwpasp' ) ?></option>
-                    <option value="all" <?php selected( $post_status, 'all' ) ?>><?php _e( 'All', 'odwpasp' ) ?></option>
-                </select>
-            </span>
-            <input id="odwpasp-search_submit_btn" name="submit_search" type="submit" value="<?php esc_attr_e( 'Search', 'odwpasp' ) ?>" class="button button-primary">
-            <span id="odwpasp-search_cancel_btn" href="<?php echo admin_url( 'tools.php?page=odwpasp-admin_page' ) ?>" class="button button-secondary"><?php _e( 'Cancel', 'odwpasp' ) ?></span>
+            <input type="hidden" name="_wpnonce" value="<?php echo $nonce_new ?>">
+            <div class="row">
+                <span class="inline-input">
+                    <label for="odwpasp-search_term"><?php _e( 'Search term: ', 'odwpasp' ) ?></label>
+                    <input class="regular-text" id="odwpasp-search_term" name="search_term" type="text" value="<?php echo esc_attr( $term ) ?>" placeholder="<?php esc_attr_e( 'Enter search term...', 'odwpasp' ) ?>">
+                </span>
+                <span class="inline-input">
+                    <label for="odwpasp-post_status"><?php _e( 'Post status: ', 'odwpasp' ) ?></label>
+                    <select id="odwpasp-post_status" name="post_status" type="text" value="<?php echo $post_status ?>">
+                        <option value="published" <?php selected( $post_status, 'published' ) ?>><?php _e( 'Published only', 'odwpasp' ) ?></option>
+                        <option value="published_drafts" <?php selected( $post_status, 'published_drafts' ) ?>><?php _e( 'Published + Drafts', 'odwpasp' ) ?></option>
+                        <option value="private" <?php selected( $post_status, 'private' ) ?>><?php _e( 'Private', 'odwpasp' ) ?></option>
+                        <option value="all" <?php selected( $post_status, 'all' ) ?>><?php _e( 'All', 'odwpasp' ) ?></option>
+                    </select>
+                </span>
+                <span class="inline-input">
+                    <label for="odwpasp-rows_count"><?php _e( 'Rows: ', 'odwpasp' ) ?></label>
+                    <select id="odwpasp-rows_count" name="rows_count" type="text" value="<?php echo $rows_count ?>">
+                        <option value="25" <?php selected( $rows_count, 25 ) ?>><?php _e( '25', 'odwpasp' ) ?></option>
+                        <option value="50" <?php selected( $rows_count, 50 ) ?>><?php _e( '50', 'odwpasp' ) ?></option>
+                        <option value="100" <?php selected( $rows_count, 100 ) ?>><?php _e( '100', 'odwpasp' ) ?></option>
+                        <option value="-1" <?php selected( $rows_count, -1 ) ?>><?php _e( 'All', 'odwpasp' ) ?></option>
+                    </select>
+                </span>
+                <span class="inline-input">
+                    <input id="odwpasp-search_submit_btn" name="submit_search" type="submit" value="<?php esc_attr_e( 'Search', 'odwpasp' ) ?>" class="button button-primary">
+                    <span id="odwpasp-search_cancel_btn" href="<?php echo admin_url( 'tools.php?page=odwpasp-admin_page' ) ?>" class="button button-secondary"><?php _e( 'Cancel', 'odwpasp' ) ?></span>
+                </span>
+            </div>
         </form>
     </div>
     <?php if( !$submitted_search ) : ?>
-    <div class="card">
+    <div class="card odwpasp-card">
         <p class="no-search-term-msg"><?php _e( 'Firstly enter any search term…', 'odwpasp' ) ?></p>
     </div>
     <?php else : ?>
     <?php if( count( $results ) == 0 ) : ?>
-    <div class="card">
+    <div class="card odwpasp-card">
         <p class="no-search-results-msg"><?php _e( 'No posts or pages found…', 'odwpasp' ) ?></p>
     </div>
     <?php else : ?>
-    <form id="odwpasp-results_table_form" action="" method="POST">
+    <form action="" class="odwpasp-results_card" method="POST">
         <input type="hidden" name="page" value="<?php echo ODWPASP_ADMIN_PAGE ?>">
-        <input type="hidden" name="term" value="<?php echo $term ?>">
-        <?php wp_nonce_field( 'odwpasp_nonce' ) ?>
+        <input type="hidden" name="search_term" value="<?php echo $term ?>">
+        <input type="hidden" name="_wpnonce" value="<?php echo $nonce_new ?>">
+        <input type="hidden" name="post_status" value="<?php echo $post_status ?>">
+        <input type="hidden" name="rows_count" value="<?php echo $rows_count ?>">
         <div class="form-container">
             <div class="form-container-inner">
                 <div class="form-cell-left">
@@ -220,9 +249,11 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
         </div>
         <table class="widefat fixed striped odwpasp-table">
             <thead>
-                <th class="col-1"><?php _e( 'Index', 'odwpasp' ) ?></th>
-                <th class="col-2 column-primary"><?php _e( 'Search result', 'odwpasp' ) ?></th>
-                <th class="col-3"><?php _e( 'Priority', 'odwpasp' ) ?></th>
+                <tr>
+                    <th class="col-1"><?php _e( 'Index', 'odwpasp' ) ?></th>
+                    <th class="col-2 column-primary"><?php _e( 'Search result', 'odwpasp' ) ?></th>
+                    <th class="col-3"><?php _e( 'Priority', 'odwpasp' ) ?></th>
+                </tr>
             </thead>
             <tbody><?php
             for( $i = 0; $i < count( $results ); $i++ ) {
@@ -235,11 +266,10 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
                     $result['post_ID'],
                     __( 'Type', 'odwpasp' ),
                     $result['type'],
-                    ( $result['status'] == 'publish' || $result['status'] == 'private' ) ? '' : $status,
+                    $status,
                     esc_url( get_page_by_title( $pid ) ),
                     __( 'Show', 'odwpasp' )
                 );
-
                 echo <<<EOC
 <tr>
     <th class="col-1" scope="row">{$result['idx']}</th>
@@ -428,7 +458,7 @@ if( !function_exists( 'odwpasp_priority_metabox_render' ) ) :
      */
     function odwpasp_priority_metabox_render( $post ) {
         $priority = get_post_meta( $post->ID, ODWPASP_META_KEY, true );
-        wp_nonce_field( 'odwpasp_nonce' );
+        wp_nonce_field( ODWPASP_NONCE );
 
 ?>
 <p>
@@ -466,7 +496,8 @@ if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
             return $post_id;
         }
 
-        $is_valid_nonce = ( isset( $_POST['odwpasp_nonce'] ) && wp_verify_nonce( $_POST['odwpasp_nonce'], ODWPASP_FILE ) );
+        $nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
+        $is_valid_nonce = wp_verify_nonce( $nonce, ODWPASP_NONCE );
 
         if( !$is_valid_nonce ) {
             return $post_id;
@@ -503,7 +534,6 @@ if( !function_exists( 'odwpasp_ajax_test_search_action' ) ) :
      * Process Ajax call for test search.
      * @return void
      * @since 1.1.0
-     * @todo Use NONCE!
      * @uses get_permalink()
      * @uses get_post_meta()
      * @uses get_post_type()
@@ -512,18 +542,35 @@ if( !function_exists( 'odwpasp_ajax_test_search_action' ) ) :
      * @uses sanitize_text_field()
      * @uses wp_die()
      * @uses wp_json_encode()
+     * @uses wp_create_nonce()
      * @uses wp_reset_postdata()
+     * @uses wp_verify_nonce()
      */
     function odwpasp_ajax_test_search_action() {
+        $nonce = $_POST['_wpnonce'];
+        $nonce_valid = (bool) wp_verify_nonce( $nonce, ODWPASP_NONCE );
+        $nonce_new = wp_create_nonce( ODWPASP_NONCE );
         $term = sanitize_text_field( $_POST['search_term'] );
-        $query = odwpasp_create_test_search_wp_query( $term );
+        $status = sanitize_text_field( $_POST['post_status'] );
+        $rows = ( $_POST['rows_count'] == '-1' ) ? -1 : intval( $_POST['rows_count'] );
+        $query = odwpasp_create_test_search_wp_query( $term, $status, $rows );
         $out = array(
             'message' => null,
             'error' => false,
             'items' => array(),
+            'term' => $term,
+            'nonce' => $nonce,
+            'nonce_valid' => $nonce_valid,
+            'nonce_new' => $nonce_new,
+            'rows' => $rows,
+            'status' => $status,
         );
 
-        if( !( $query instanceof \WP_Query ) ) {
+        if( $nonce_valid !== true ) {
+            $out['message'] = __( 'Request was not processed correctly, something wrong with security…', 'odwpasp' );
+            $out['error'] = true;
+        }
+        elseif( !( $query instanceof \WP_Query ) ) {
             $out['message'] = __( 'Firstly enter any search term…', 'odwpasp' );
             $out['error'] = true;
         } else {
