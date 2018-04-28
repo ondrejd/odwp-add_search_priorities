@@ -49,7 +49,7 @@ if( !function_exists( 'odwpasp_admin_enqueue_scripts' ) ) :
         $js_path = dirname( __FILE__ ) . '/' . $js_file;
 
         if( file_exists( $js_path ) && is_readable( $js_path ) ) {
-        wp_enqueue_script( 'odwpasp', plugins_url( $js_file, __FILE__ ), ['jquery'] );
+            wp_enqueue_script( 'odwpasp', plugins_url( $js_file, __FILE__ ), ['jquery'] );
             wp_localize_script( 'odwpasp', 'odwpasp', array(
                 'admin_page'      => ODWPASP_ADMIN_PAGE,
                 'admin_page_url'  => admin_url( 'tools.php?page=' . ODWPASP_ADMIN_PAGE ),
@@ -66,6 +66,7 @@ if( !function_exists( 'odwpasp_admin_enqueue_scripts' ) ) :
                 'id_text'         => __( 'ID', 'odwpasp' ),
                 'type_text'       => __( 'Type', 'odwpasp' ),
                 'show_text'       => __( 'Show', 'odwpasp' ),
+                'updating_msg'    => __( 'Updating priorities…', 'odwpasp' ),
             ) );
         }
 
@@ -274,7 +275,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
 <tr>
     <th class="col-1" scope="row">{$result['idx']}</th>
     <td class="col-2 column-primary">$primary</td>
-    <td class="col-3"><input type="text" name="p[{$result['post_ID']}]" class="small-text" value="{$result['priority']}" class="input-priority"></td>
+    <td class="col-3"><input type="text" name="p[{$result['post_ID']}]" data-post_ID="{$result['post_ID']}" class="small-text odwpasp-priority_input" value="{$result['priority']}" class="input-priority"></td>
 </tr>
 EOC;
             }
@@ -503,8 +504,9 @@ if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
             return $post_id;
         }
 
-        if( isset($_POST['odwpasp-priority'] ) ) {
-            update_post_meta( $post_id, ODWPASP_META_KEY, $_POST['odwpasp-priority'] );
+        if( isset( $_POST['odwpasp-priority'] ) ) {
+            $priority = intval( $_POST['odwpasp-priority'] );
+            update_post_meta( $post_id, ODWPASP_META_KEY, $priority );
         }
         
         return $post_id;
@@ -534,16 +536,10 @@ if( !function_exists( 'odwpasp_ajax_test_search_action' ) ) :
      * Process Ajax call for test search.
      * @return void
      * @since 1.1.0
-     * @uses get_permalink()
-     * @uses get_post_meta()
-     * @uses get_post_type()
-     * @uses get_post_status()
-     * @uses get_the_title()
      * @uses sanitize_text_field()
      * @uses wp_die()
      * @uses wp_json_encode()
      * @uses wp_create_nonce()
-     * @uses wp_reset_postdata()
      * @uses wp_verify_nonce()
      */
     function odwpasp_ajax_test_search_action() {
@@ -588,12 +584,91 @@ endif;
 add_action( 'wp_ajax_odwpasp_test_search', 'odwpasp_ajax_test_search_action' );
 
 
+if( !function_exists( 'odwpasp_ajax_submit_priorities' ) ) :
+    /**
+     * Process Ajax query with submit priorities.
+     * @return void
+     * @since 1.1.0
+     * @uses sanitize_text_field()
+     * @uses update_post_meta()
+     * @uses wp_die()
+     * @uses wp_json_encode()
+     * @uses wp_create_nonce()
+     * @uses wp_verify_nonce()
+     */
+    function odwpasp_ajax_submit_priorities() {
+        $nonce = $_POST['_wpnonce'];
+        $nonce_valid = (bool) wp_verify_nonce( $nonce, ODWPASP_NONCE );
+        $nonce_new = wp_create_nonce( ODWPASP_NONCE );
+        $term = sanitize_text_field( $_POST['search_term'] );
+        $status = sanitize_text_field( $_POST['post_status'] );
+        $rows = ( $_POST['rows_count'] == '-1' ) ? -1 : intval( $_POST['rows_count'] );
+        $priorities = $_POST['priorities'];
+        $out = array(
+            'message' => null,
+            'error' => false,
+            'items' => array(),
+            'term' => $term,
+            'nonce' => $nonce,
+            'nonce_valid' => $nonce_valid,
+            'nonce_new' => $nonce_new,
+            'rows' => $rows,
+            'status' => $status,
+        );
+
+        if( $nonce_valid !== true ) {
+            $out['message'] = __( 'Request was not processed correctly, something wrong with security…', 'odwpasp' );
+            $out['error'] = true;
+        }
+        elseif( count( $priorities ) < 1 ) {
+            $out['message'] = __( 'No priorities - nothing to save…', 'odwpasp' );
+        }
+        else {
+            // Firstly save priorities
+            for( $i = 0; $i < count( $priorities ); $i++ ) {
+                $p = $priorities[$i];
+                update_post_meta( $p['post_ID'], ODWPASP_META_KEY, $p['value'] );
+            }
+        }
+
+        if( $out['error'] !== true ) {
+            // Initialize WP_Query
+            $query = odwpasp_create_test_search_wp_query( $term, $status, $rows );
+
+            // Process WP_Query
+            if( !( $query instanceof \WP_Query ) ) {
+                $out['message'] = __( 'Firstly enter any search term…', 'odwpasp' );
+                $out['error'] = true;
+            } else {
+                if( !$query->have_posts() ) {
+                    $out['message'] = __( 'No posts or pages found…', 'odwpasp' );
+                } else {
+                    $out['items'] = odwpasp_process_test_search_wp_query( $query );
+                }
+            }
+        }
+
+        echo wp_json_encode( $out );
+        wp_die();
+    }
+endif;
+add_action( 'wp_ajax_odwpasp_submit_priorities', 'odwpasp_ajax_submit_priorities' );
+
+
 if( !function_exists( 'odwpasp_process_test_search_wp_query' ) ) :
     /**
      * Process given {@see WP_Query} and returns array of results (or empty array).
      * @param \WP_Query $query
      * @return array
      * @since 1.1.0
+     * @uses esc_url()
+     * @uses get_permalink()
+     * @uses get_post_meta()
+     * @uses get_post_status()
+     * @uses get_post_type()
+     * @uses get_the_ID()
+     * @uses get_the_title()
+     * @uses wp_reset_postdata()
      */
     function odwpasp_process_test_search_wp_query( \WP_Query $query ) {
         $out = array();
