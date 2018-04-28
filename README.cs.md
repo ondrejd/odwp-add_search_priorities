@@ -20,13 +20,7 @@ Pokud se vám tento plugin líbí a chcete podpořit jeho vývoj, můžete zvá�
 
 Jak vidíte na obrázku níže, nastavení priorit je opravdu snadné:
 
-![Administrační stránka](assets/screenshots/screenshot-01.png "Administrační stránka")
-
-### Zobrazené výsledky
-
-A takto vypadají ovlivněné výsledky (dle priorit v obrázku výše):
-
-![Výsledky vyhledávání](assets/screenshots/screenshot-02.png "Výsledky vyhledávání")
+![Administrační stránka](assets/screenshots/screenshot-01-cs.png "Administrační stránka")
 
 [1]:https://wordpress.org/
 [2]:https://www.relevanssi.com/
