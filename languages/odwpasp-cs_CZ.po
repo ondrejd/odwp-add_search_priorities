@@ -4,10 +4,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: odwp-add_search_priorities\n"
-"POT-Creation-Date: 2018-04-24 15:06+0200\n"
-"PO-Revision-Date: \n"
-"Language-Team: Ondřej Doněk <ondrejd@gmail.com>\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2018-04-28 08:35+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Ondřej Doněk <ondrejd@gmail.com>\n"
+"Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,114 +21,171 @@ msgstr ""
 "_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Generator: Poedit 2.0.4\n"
-"Last-Translator: \n"
-"Language: cs_CZ\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: assets\n"
 
-#: odwp-add_search_priorities.php:70 odwp-add_search_priorities.php:134
-msgid "Customize search results order"
-msgstr "Úprava pořadí výsledků vyhledávání"
+#: odwp-add_search_priorities.php:57 odwp-add_search_priorities.php:227
+#: odwp-add_search_priorities.php:570 odwp-add_search_priorities.php:640
+msgid "Firstly enter any search term…"
+msgstr "Nejprve musíte zadat hledaný termín…"
 
-#: odwp-add_search_priorities.php:71
-msgid "Customize search"
-msgstr "Upravit vyhledávání"
+#: odwp-add_search_priorities.php:58
+msgid "Searching…"
+msgstr "Hledám…"
 
-#: odwp-add_search_priorities.php:93
-msgid "You have incuffient permissions for accessing this page."
-msgstr "Pro přístup k této stránce nemáte dostatečná oprávnění."
+#: odwp-add_search_priorities.php:59
+msgid "There was an error so search can not be completed…"
+msgstr "Vyskytla se chyba a vyhledávání nemohlo být dokončeno…"
 
-#: odwp-add_search_priorities.php:137
-msgid "Test search"
-msgstr "Testovací vyhledávání"
-
-#: odwp-add_search_priorities.php:141
-msgid "Search term: "
-msgstr "Hledaný termín:"
-
-#: odwp-add_search_priorities.php:145
-msgid "Post status: "
-msgstr "Stav příspěvku:"
-
-#: odwp-add_search_priorities.php:147
-msgid "Published only"
-msgstr "Pouze publikované"
-
-#: odwp-add_search_priorities.php:148
-msgid "Published + Drafts"
-msgstr "Publikované + Koncepty"
-
-#: odwp-add_search_priorities.php:149
-msgid "Private"
-msgstr "Soukromé"
-
-#: odwp-add_search_priorities.php:150
-msgid "All"
-msgstr "Všechny"
-
-#: odwp-add_search_priorities.php:153
-msgid "Search"
-msgstr "Vyhledat"
-
-#: odwp-add_search_priorities.php:154
-msgid "Cancel"
-msgstr "Zrušit"
-
-#: odwp-add_search_priorities.php:159
-msgid "Firstly enter any search term&hellip;"
-msgstr "Nejprve musíte zadat nějaký hledaný termín&hellip;"
-
-#: odwp-add_search_priorities.php:164
-msgid "No posts or pages found&hellip;"
-msgstr "Nebyly nalezeny žádné stránky ani příspěvky&hellip;"
-
-#: odwp-add_search_priorities.php:173 odwp-add_search_priorities.php:216
+#: odwp-add_search_priorities.php:60 odwp-add_search_priorities.php:244
+#: odwp-add_search_priorities.php:285
 msgid "Save priorities"
 msgstr "Uložit priority"
 
-#: odwp-add_search_priorities.php:176
+#: odwp-add_search_priorities.php:61 odwp-add_search_priorities.php:247
 #, php-format
 msgid "Results count: %1$d"
 msgstr "Počet výsledků: %1$d"
 
-#: odwp-add_search_priorities.php:182
-msgid "I."
-msgstr "P."
+#: odwp-add_search_priorities.php:62 odwp-add_search_priorities.php:254
+msgid "Index"
+msgstr "Pořadí"
 
-#: odwp-add_search_priorities.php:183
+#: odwp-add_search_priorities.php:63 odwp-add_search_priorities.php:255
 msgid "Search result"
 msgstr "Výsledek vyhledávání"
 
-#: odwp-add_search_priorities.php:184
+#: odwp-add_search_priorities.php:64 odwp-add_search_priorities.php:256
 msgid "Priority"
 msgstr "Priorita"
 
+#: odwp-add_search_priorities.php:65 odwp-add_search_priorities.php:262
+msgid "Status"
+msgstr "Stav"
+
+#: odwp-add_search_priorities.php:66 odwp-add_search_priorities.php:266
+msgid "ID"
+msgstr "ID"
+
+#: odwp-add_search_priorities.php:67 odwp-add_search_priorities.php:268
+msgid "Type"
+msgstr "Typ"
+
+#: odwp-add_search_priorities.php:68 odwp-add_search_priorities.php:272
+msgid "Show"
+msgstr "Zobrazit"
+
+#: odwp-add_search_priorities.php:69
+msgid "Updating priorities…"
+msgstr "Aktualizuji priority…"
+
+#: odwp-add_search_priorities.php:94 odwp-add_search_priorities.php:183
+msgid "Customize search results order"
+msgstr "Úprava pořadí výsledků vyhledávání"
+
+#: odwp-add_search_priorities.php:95
+msgid "Customize search"
+msgstr "Upravit vyhledávání"
+
+#: odwp-add_search_priorities.php:155
+msgid "You have incuffient permissions for accessing this page."
+msgstr "Pro přístup k této stránce nemáte dostatečná oprávnění."
+
+#: odwp-add_search_priorities.php:187 odwp-add_search_priorities.php:566
+#: odwp-add_search_priorities.php:620
+msgid "Request was not processed correctly, something wrong with security…"
+msgstr "Žádost nebyla správně zpracována, něco špatného z bezpečností…"
+
+#: odwp-add_search_priorities.php:191
+msgid "Test search"
+msgstr "Testovací vyhledávání"
+
 #: odwp-add_search_priorities.php:197
-#, php-format
-msgid ""
-"<b>%1$s</b> [ID: <code>%2$d</code> | Type: <em>%3$s</em> | <a href=\"%4$s\" "
-"target=\"blank\">Show <span class=\"dashicons dashicons-external\"></span></"
-"a>]"
-msgstr ""
-"<b>%1$s</b> [ID: <code>%2$d</code> | Typ: <em>%3$s</em> | <a href=\"%4$s\" "
-"target=\"blank\">Zobrazit <span class=\"dashicons dashicons-external\"></"
-"span></a>]"
+msgid "Search term: "
+msgstr "Hledaný termín:"
 
-#: odwp-add_search_priorities.php:202
-#, php-format
-msgid ""
-"<b>%1$s</b> [ID: <code>%2$d</code> | Type: <em>%3$s</em> | Status: <em>%4$s</"
-"em> | <a href=\"%5$s\" target=\"blank\">Show <span class=\"dashicons "
-"dashicons-external\"></span></a>]"
-msgstr ""
-"<b>%1$s</b> [ID: <code>%2$d</code> | Typ: <em>%3$s</em> | Stav: <em>%4$s</"
-"em> | <a href=\"%5$s\" target=\"blank\">Zobrazit <span class=\"dashicons "
-"dashicons-external\"></span></a>]"
+#: odwp-add_search_priorities.php:198
+msgid "Enter search term..."
+msgstr "Zadejte hledaný termín…"
 
-#: odwp-add_search_priorities.php:368
+#: odwp-add_search_priorities.php:201
+msgid "Post status: "
+msgstr "Stav příspěvku:"
+
+#: odwp-add_search_priorities.php:203
+msgid "Published only"
+msgstr "Pouze publikované"
+
+#: odwp-add_search_priorities.php:204
+msgid "Published + Drafts"
+msgstr "Publikované + Koncepty"
+
+#: odwp-add_search_priorities.php:205
+msgid "Private"
+msgstr "Soukromé"
+
+#: odwp-add_search_priorities.php:206 odwp-add_search_priorities.php:215
+msgid "All"
+msgstr "Všechny"
+
+#: odwp-add_search_priorities.php:210
+msgid "Rows: "
+msgstr "Řádků: "
+
+#: odwp-add_search_priorities.php:212
+msgid "25"
+msgstr "25"
+
+#: odwp-add_search_priorities.php:213
+msgid "50"
+msgstr "50"
+
+#: odwp-add_search_priorities.php:214
+msgid "100"
+msgstr "100"
+
+#: odwp-add_search_priorities.php:219
+msgid "Search"
+msgstr "Vyhledat"
+
+#: odwp-add_search_priorities.php:220
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: odwp-add_search_priorities.php:232 odwp-add_search_priorities.php:574
+#: odwp-add_search_priorities.php:644
+msgid "No posts or pages found…"
+msgstr "Nebyly nalezeny žádné stránky ani příspěvky…"
+
+#: odwp-add_search_priorities.php:443
 msgid "Search order priority"
 msgstr "Priorita řazení"
 
-#: odwp-add_search_priorities.php:389
+#: odwp-add_search_priorities.php:466
 msgid "Priority:"
 msgstr "Priorita:"
+
+#: odwp-add_search_priorities.php:624
+msgid "No priorities - nothing to save…"
+msgstr "Žádné priority nebyly odeslány - nic nebylo uloženo…"
+
+#~ msgid "I."
+#~ msgstr "P."
+
+#~ msgid ""
+#~ "<b>%1$s</b> [ID: <code>%2$d</code> | Type: <em>%3$s</em> | <a href=\"%4$s"
+#~ "\" target=\"blank\">Show <span class=\"dashicons dashicons-external\"></"
+#~ "span></a>]"
+#~ msgstr ""
+#~ "<b>%1$s</b> [ID: <code>%2$d</code> | Typ: <em>%3$s</em> | <a href=\"%4$s"
+#~ "\" target=\"blank\">Zobrazit <span class=\"dashicons dashicons-external"
+#~ "\"></span></a>]"
+
+#~ msgid ""
+#~ "<b>%1$s</b> [ID: <code>%2$d</code> | Type: <em>%3$s</em> | Status: <em>"
+#~ "%4$s</em> | <a href=\"%5$s\" target=\"blank\">Show <span class="
+#~ "\"dashicons dashicons-external\"></span></a>]"
+#~ msgstr ""
+#~ "<b>%1$s</b> [ID: <code>%2$d</code> | Typ: <em>%3$s</em> | Stav: <em>%4$s</"
+#~ "em> | <a href=\"%5$s\" target=\"blank\">Zobrazit <span class=\"dashicons "
+#~ "dashicons-external\"></span></a>]"

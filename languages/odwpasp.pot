@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: odwp-"
 "add_search_priorities\n"
 "POT-Creation-Date: "
-"2018-04-24 15:06+0200\n"
+"2018-04-28 08:35+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Your "
 "Name <you@example.com>\n"
@@ -53,124 +53,182 @@ msgstr ""
 "SearchPathExcluded-0: "
 "assets\n"
 
-#: odwp-add_search_priorities.php:70
-#: odwp-add_search_priorities.php:134
+#: odwp-add_search_priorities.php:57
+#: odwp-add_search_priorities.php:227
+#: odwp-add_search_priorities.php:570
+#: odwp-add_search_priorities.php:640
+msgid ""
+"Firstly enter any search "
+"term…"
+msgstr ""
+
+#: odwp-add_search_priorities.php:58
+msgid "Searching…"
+msgstr ""
+
+#: odwp-add_search_priorities.php:59
+msgid ""
+"There was an error so "
+"search can not be "
+"completed…"
+msgstr ""
+
+#: odwp-add_search_priorities.php:60
+#: odwp-add_search_priorities.php:244
+#: odwp-add_search_priorities.php:285
+msgid "Save priorities"
+msgstr ""
+
+#: odwp-add_search_priorities.php:61
+#: odwp-add_search_priorities.php:247
+#, php-format
+msgid "Results count: %1$d"
+msgstr ""
+
+#: odwp-add_search_priorities.php:62
+#: odwp-add_search_priorities.php:254
+msgid "Index"
+msgstr ""
+
+#: odwp-add_search_priorities.php:63
+#: odwp-add_search_priorities.php:255
+msgid "Search result"
+msgstr ""
+
+#: odwp-add_search_priorities.php:64
+#: odwp-add_search_priorities.php:256
+msgid "Priority"
+msgstr ""
+
+#: odwp-add_search_priorities.php:65
+#: odwp-add_search_priorities.php:262
+msgid "Status"
+msgstr ""
+
+#: odwp-add_search_priorities.php:66
+#: odwp-add_search_priorities.php:266
+msgid "ID"
+msgstr ""
+
+#: odwp-add_search_priorities.php:67
+#: odwp-add_search_priorities.php:268
+msgid "Type"
+msgstr ""
+
+#: odwp-add_search_priorities.php:68
+#: odwp-add_search_priorities.php:272
+msgid "Show"
+msgstr ""
+
+#: odwp-add_search_priorities.php:69
+msgid ""
+"Updating priorities…"
+msgstr ""
+
+#: odwp-add_search_priorities.php:94
+#: odwp-add_search_priorities.php:183
 msgid ""
 "Customize search results "
 "order"
 msgstr ""
 
-#: odwp-add_search_priorities.php:71
+#: odwp-add_search_priorities.php:95
 msgid "Customize search"
 msgstr ""
 
-#: odwp-add_search_priorities.php:93
+#: odwp-add_search_priorities.php:155
 msgid ""
 "You have incuffient "
 "permissions for "
 "accessing this page."
 msgstr ""
 
-#: odwp-add_search_priorities.php:137
+#: odwp-add_search_priorities.php:187
+#: odwp-add_search_priorities.php:566
+#: odwp-add_search_priorities.php:620
+msgid ""
+"Request was not "
+"processed correctly, "
+"something wrong with "
+"security…"
+msgstr ""
+
+#: odwp-add_search_priorities.php:191
 msgid "Test search"
 msgstr ""
 
-#: odwp-add_search_priorities.php:141
+#: odwp-add_search_priorities.php:197
 msgid "Search term: "
 msgstr ""
 
-#: odwp-add_search_priorities.php:145
+#: odwp-add_search_priorities.php:198
+msgid ""
+"Enter search term..."
+msgstr ""
+
+#: odwp-add_search_priorities.php:201
 msgid "Post status: "
 msgstr ""
 
-#: odwp-add_search_priorities.php:147
+#: odwp-add_search_priorities.php:203
 msgid "Published only"
 msgstr ""
 
-#: odwp-add_search_priorities.php:148
+#: odwp-add_search_priorities.php:204
 msgid "Published + Drafts"
 msgstr ""
 
-#: odwp-add_search_priorities.php:149
+#: odwp-add_search_priorities.php:205
 msgid "Private"
 msgstr ""
 
-#: odwp-add_search_priorities.php:150
+#: odwp-add_search_priorities.php:206
+#: odwp-add_search_priorities.php:215
 msgid "All"
 msgstr ""
 
-#: odwp-add_search_priorities.php:153
+#: odwp-add_search_priorities.php:210
+msgid "Rows: "
+msgstr ""
+
+#: odwp-add_search_priorities.php:212
+msgid "25"
+msgstr ""
+
+#: odwp-add_search_priorities.php:213
+msgid "50"
+msgstr ""
+
+#: odwp-add_search_priorities.php:214
+msgid "100"
+msgstr ""
+
+#: odwp-add_search_priorities.php:219
 msgid "Search"
 msgstr ""
 
-#: odwp-add_search_priorities.php:154
+#: odwp-add_search_priorities.php:220
 msgid "Cancel"
 msgstr ""
 
-#: odwp-add_search_priorities.php:159
+#: odwp-add_search_priorities.php:232
+#: odwp-add_search_priorities.php:574
+#: odwp-add_search_priorities.php:644
 msgid ""
-"Firstly enter any search "
-"term&hellip;"
+"No posts or pages found…"
 msgstr ""
 
-#: odwp-add_search_priorities.php:164
-msgid ""
-"No posts or pages "
-"found&hellip;"
-msgstr ""
-
-#: odwp-add_search_priorities.php:173
-#: odwp-add_search_priorities.php:216
-msgid "Save priorities"
-msgstr ""
-
-#: odwp-add_search_priorities.php:176
-#, php-format
-msgid "Results count: %1$d"
-msgstr ""
-
-#: odwp-add_search_priorities.php:182
-msgid "I."
-msgstr ""
-
-#: odwp-add_search_priorities.php:183
-msgid "Search result"
-msgstr ""
-
-#: odwp-add_search_priorities.php:184
-msgid "Priority"
-msgstr ""
-
-#: odwp-add_search_priorities.php:197
-#, php-format
-msgid ""
-"<b>%1$s</b> [ID: <code>"
-"%2$d</code> | Type: <em>"
-"%3$s</em> | <a href="
-"\"%4$s\" target=\"blank"
-"\">Show <span class="
-"\"dashicons dashicons-"
-"external\"></span></a>]"
-msgstr ""
-
-#: odwp-add_search_priorities.php:202
-#, php-format
-msgid ""
-"<b>%1$s</b> [ID: <code>"
-"%2$d</code> | Type: <em>"
-"%3$s</em> | Status: <em>"
-"%4$s</em> | <a href="
-"\"%5$s\" target=\"blank"
-"\">Show <span class="
-"\"dashicons dashicons-"
-"external\"></span></a>]"
-msgstr ""
-
-#: odwp-add_search_priorities.php:368
+#: odwp-add_search_priorities.php:443
 msgid ""
 "Search order priority"
 msgstr ""
 
-#: odwp-add_search_priorities.php:389
+#: odwp-add_search_priorities.php:466
 msgid "Priority:"
+msgstr ""
+
+#: odwp-add_search_priorities.php:624
+msgid ""
+"No priorities - nothing "
+"to save…"
 msgstr ""
