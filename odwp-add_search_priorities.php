@@ -3,16 +3,35 @@
  * Plugin Name: Customize search results order
  * Plugin URI: https://github.com/ondrejd/odwp-add_search_priorities
  * Description: Plugin which customizes order of search results by additional priority value. It supports plain <a href="https://wordpress.org" target="blank">WordPress</a> as well as plugin <a href="https://www.relevanssi.com/" target="blank">Relevanssi</a>.
- * Version: 1.1.0
+ * Version: 1.2
  * Author: Ondřej Doněk
  * Author URI: https://ondrejd.com/
  * License: GPLv3
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
  * Requires at least: 4.8
  * Tested up to: 4.9.5
  * Tags: search,meta box
  * Donate link: https://www.paypal.me/ondrejd
  * Text Domain: odwpasp
  * Domain Path: /languages/
+ *
+ * WordPress plugin odwp-add_search_priorities customizes search results order
+ * by new meta value (priority).
+ * 
+ * Copyright (C) 2018 Ondřej Doněk
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Ondřej Doněk <ondrejd@gmail.com>
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License 3.0
@@ -180,56 +199,56 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
 
 ?>
 <div id="odwpasp-admin_page" class="wrap odwpasp">
-    <h1 class="wp-heading-inline"><?php _e( 'Customize search results order', 'odwpasp' ) ?></h1>
+    <h1 class="wp-heading-inline"><?php esc_html_e( 'Customize search results order', 'odwpasp' ) ?></h1>
     <hr class="wp-header-end">
     <?php if( ( $submitted_priorities || $submitted_search ) && !$is_valid_nonce ) : ?>
     <div class="notice notice-error s-dismissible">
-        <p><?php _e( 'Request was not processed correctly, something wrong with security…', 'odwpasp' ) ?></p>
+        <p><?php esc_html_e( 'Request was not processed correctly, something wrong with security…', 'odwpasp' ) ?></p>
     </div>
     <?php endif ?>
     <div id="odwpasp-test_search_form_card" class="card">
-        <h2 class="title"><?php _e( 'Test search', 'odwpasp' ) ?></h2>
+        <h2 class="title"><?php esc_html_e( 'Test search', 'odwpasp' ) ?></h2>
         <form action="" id="odwpasp-test_search_form" method="POST">
             <input type="hidden" name="page" value="<?php echo ODWPASP_ADMIN_PAGE ?>">
             <input type="hidden" name="_wpnonce" value="<?php echo $nonce_new ?>">
             <div class="row">
                 <span class="inline-input">
-                    <label for="odwpasp-search_term"><?php _e( 'Search term: ', 'odwpasp' ) ?></label>
+                    <label for="odwpasp-search_term"><?php esc_html_e( 'Search term: ', 'odwpasp' ) ?></label>
                     <input class="regular-text" id="odwpasp-search_term" name="search_term" type="text" value="<?php echo esc_attr( $term ) ?>" placeholder="<?php esc_attr_e( 'Enter search term...', 'odwpasp' ) ?>">
                 </span>
                 <span class="inline-input">
-                    <label for="odwpasp-post_status"><?php _e( 'Post status: ', 'odwpasp' ) ?></label>
+                    <label for="odwpasp-post_status"><?php esc_html_e( 'Post status: ', 'odwpasp' ) ?></label>
                     <select id="odwpasp-post_status" name="post_status" type="text" value="<?php echo $post_status ?>">
-                        <option value="published" <?php selected( $post_status, 'published' ) ?>><?php _e( 'Published only', 'odwpasp' ) ?></option>
-                        <option value="published_drafts" <?php selected( $post_status, 'published_drafts' ) ?>><?php _e( 'Published + Drafts', 'odwpasp' ) ?></option>
-                        <option value="private" <?php selected( $post_status, 'private' ) ?>><?php _e( 'Private', 'odwpasp' ) ?></option>
-                        <option value="all" <?php selected( $post_status, 'all' ) ?>><?php _e( 'All', 'odwpasp' ) ?></option>
+                        <option value="published" <?php selected( $post_status, 'published' ) ?>><?php esc_html_e( 'Published only', 'odwpasp' ) ?></option>
+                        <option value="published_drafts" <?php selected( $post_status, 'published_drafts' ) ?>><?php esc_html_e( 'Published + Drafts', 'odwpasp' ) ?></option>
+                        <option value="private" <?php selected( $post_status, 'private' ) ?>><?php esc_html_e( 'Private', 'odwpasp' ) ?></option>
+                        <option value="all" <?php selected( $post_status, 'all' ) ?>><?php esc_html_e( 'All', 'odwpasp' ) ?></option>
                     </select>
                 </span>
                 <span class="inline-input">
-                    <label for="odwpasp-rows_count"><?php _e( 'Rows: ', 'odwpasp' ) ?></label>
+                    <label for="odwpasp-rows_count"><?php esc_html_e( 'Rows: ', 'odwpasp' ) ?></label>
                     <select id="odwpasp-rows_count" name="rows_count" type="text" value="<?php echo $rows_count ?>">
-                        <option value="25" <?php selected( $rows_count, 25 ) ?>><?php _e( '25', 'odwpasp' ) ?></option>
-                        <option value="50" <?php selected( $rows_count, 50 ) ?>><?php _e( '50', 'odwpasp' ) ?></option>
-                        <option value="100" <?php selected( $rows_count, 100 ) ?>><?php _e( '100', 'odwpasp' ) ?></option>
-                        <option value="-1" <?php selected( $rows_count, -1 ) ?>><?php _e( 'All', 'odwpasp' ) ?></option>
+                        <option value="25" <?php selected( $rows_count, 25 ) ?>><?php esc_html_e( '25', 'odwpasp' ) ?></option>
+                        <option value="50" <?php selected( $rows_count, 50 ) ?>><?php esc_html_e( '50', 'odwpasp' ) ?></option>
+                        <option value="100" <?php selected( $rows_count, 100 ) ?>><?php esc_html_e( '100', 'odwpasp' ) ?></option>
+                        <option value="-1" <?php selected( $rows_count, -1 ) ?>><?php esc_html_e( 'All', 'odwpasp' ) ?></option>
                     </select>
                 </span>
                 <span class="inline-input">
                     <input id="odwpasp-search_submit_btn" name="submit_search" type="submit" value="<?php esc_attr_e( 'Search', 'odwpasp' ) ?>" class="button button-primary">
-                    <span id="odwpasp-search_cancel_btn" href="<?php echo admin_url( 'tools.php?page=odwpasp-admin_page' ) ?>" class="button button-secondary"><?php _e( 'Cancel', 'odwpasp' ) ?></span>
+                    <span id="odwpasp-search_cancel_btn" href="<?php echo admin_url( 'tools.php?page=odwpasp-admin_page' ) ?>" class="button button-secondary"><?php esc_html_e( 'Cancel', 'odwpasp' ) ?></span>
                 </span>
             </div>
         </form>
     </div>
     <?php if( !$submitted_search ) : ?>
     <div class="card odwpasp-card">
-        <p class="no-search-term-msg"><?php _e( 'Firstly enter any search term…', 'odwpasp' ) ?></p>
+        <p class="no-search-term-msg"><?php esc_html_e( 'Firstly enter any search term…', 'odwpasp' ) ?></p>
     </div>
     <?php else : ?>
     <?php if( count( $results ) == 0 ) : ?>
     <div class="card odwpasp-card">
-        <p class="no-search-results-msg"><?php _e( 'No posts or pages found…', 'odwpasp' ) ?></p>
+        <p class="no-search-results-msg"><?php esc_html_e( 'No posts or pages found…', 'odwpasp' ) ?></p>
     </div>
     <?php else : ?>
     <form action="" class="odwpasp-results_card" method="POST">
@@ -244,32 +263,32 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
                     <input type="submit" id="odwpasp-priorities_submit" name="submit_priorities" value="<?php esc_attr_e( 'Save priorities', 'odwpasp' ) ?>" class="button button-primary">
                 </div>
                 <div class="form-cell-right">
-                    <?php printf( __( 'Results count: %1$d', 'odwpasp' ), $query->post_count ) ?>
+                    <?php printf( esc_html__( 'Results count: %1$d', 'odwpasp' ), $query->post_count ) ?>
                 </div>
             </div>
         </div>
         <table class="widefat fixed striped odwpasp-table">
             <thead>
                 <tr>
-                    <th class="col-1"><?php _e( 'Index', 'odwpasp' ) ?></th>
-                    <th class="col-2 column-primary"><?php _e( 'Search result', 'odwpasp' ) ?></th>
-                    <th class="col-3"><?php _e( 'Priority', 'odwpasp' ) ?></th>
+                    <th class="col-1"><?php esc_html_e( 'Index', 'odwpasp' ) ?></th>
+                    <th class="col-2 column-primary"><?php esc_html_e( 'Search result', 'odwpasp' ) ?></th>
+                    <th class="col-3"><?php esc_html_e( 'Priority', 'odwpasp' ) ?></th>
                 </tr>
             </thead>
             <tbody><?php
             for( $i = 0; $i < count( $results ); $i++ ) {
                 $result = $results[$i];
-                $status = sprintf( '%1$s: <em>%2$s</em> | ', __( 'Status', 'odwpasp' ), $result['status'] );
+                $status = sprintf( '%1$s: <em>%2$s</em> | ', esc_html__( 'Status', 'odwpasp' ), $result['status'] );
                 $primary = sprintf(
                     '<b>%1$s</b> [%2$s: <code>%3$d</code> | %4$s: <em>%5$s</em> | %6$s<a href="%7$s" target="blank">%8$s <span class="dashicons dashicons-external"></span></a>]',
                     $result['title'],
-                    __( 'ID', 'odwpasp' ),
+                    esc_html__( 'ID', 'odwpasp' ),
                     $result['post_ID'],
-                    __( 'Type', 'odwpasp' ),
+                    esc_html__( 'Type', 'odwpasp' ),
                     $result['type'],
                     $status,
                     esc_url( get_page_by_title( $pid ) ),
-                    __( 'Show', 'odwpasp' )
+                    esc_html__( 'Show', 'odwpasp' )
                 );
                 echo <<<EOC
 <tr>
@@ -463,7 +482,7 @@ if( !function_exists( 'odwpasp_priority_metabox_render' ) ) :
 
 ?>
 <p>
-    <label for="odwpasp-priority"><?php _e( 'Priority:', 'odwpasp' ) ?></label>
+    <label for="odwpasp-priority"><?php esc_html_e( 'Priority:', 'odwpasp' ) ?></label>
     <input class="short-text" id="odwpasp-priority" name="odwpasp-priority" type="text" value="<?php echo esc_attr( $priority ) ?>">
 </p>
 <?php
