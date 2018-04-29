@@ -5,7 +5,7 @@ Tags: search,meta box
 Requires at least: 4.8
 Tested up to: 4.9.5
 Requires PHP: 5.2.4
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
  
@@ -33,6 +33,9 @@ This section describes how to install the plugin and get it working.
 2. Another screen of plugin's admin screen
  
 == Changelog ==
+
+= 1.2.1 =
+* Some code fixes because of publishing on __WordPress Plugins Directory__
 
 = 1.2 =
 * Added `readme.txt`
