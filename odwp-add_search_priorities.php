@@ -177,7 +177,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
         $nonce_new = wp_create_nonce( ODWPASP_NONCE );
         $nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : null;
         $term = isset( $_POST['search_term'] ) ? sanitize_text_field( $_POST['search_term'] ) : null;
-        $post_status = isset( $_POST['post_status'] ) ? $_POST['post_status'] : null;
+        $post_status = isset( $_POST['post_status'] ) ? sanitize_text_field( $_POST['post_status'] ) : null;
         $rows_count = isset( $_POST['rows_count'] ) ? ( ( $_POST['rows_count'] == '-1' ) ? -1 : intval( $_POST['rows_count'] ) ) : -1;
         $submitted_priorities = isset( $_POST['submit_priorities'] );
         $submitted_search = ( isset( $_POST['submit_search'] ) || $submitted_priorities );
@@ -186,8 +186,10 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
         
         // Update submitted priorities
         if( $submitted_priorities && $is_valid_nonce ) {
-            foreach( $_POST['p'] as $id => $v ) {
-                update_post_meta( $id, ODWPASP_META_KEY, $v );
+            $priorities = filter_input( INPUT_POST, 'p', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY );
+
+            foreach( $priorities as $id => $v ) {
+                update_post_meta( intval( $id ), ODWPASP_META_KEY, intval( $v ) );
             }
         }
 
@@ -523,9 +525,10 @@ if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
             return $post_id;
         }
 
-        if( isset( $_POST['odwpasp-priority'] ) ) {
-            $priority = intval( $_POST['odwpasp-priority'] );
-            update_post_meta( $post_id, ODWPASP_META_KEY, $priority );
+        $priority = filter_input( INPUT_POST, 'odwpasp-priority', FILTER_VALIDATE_INT );
+
+        if( $priority !== false ) {
+            update_post_meta( $post_id, ODWPASP_META_KEY, (int) $priority );
         }
         
         return $post_id;
