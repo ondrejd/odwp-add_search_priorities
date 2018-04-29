@@ -162,6 +162,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
      * @return void
      * @since 1.0.0
      * @uses current_user_can()
+     * @uses get_permalink()
      * @uses get_post_meta()
      * @uses sanitize_text_field()
      * @uses wp_die()
@@ -289,7 +290,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
                     esc_html__( 'Type', 'odwpasp' ),
                     $result['type'],
                     $status,
-                    esc_url( get_page_by_title( $result['post_ID'] ) ),
+                    esc_url( get_permalink( $result['post_ID'] ) ),
                     esc_html__( 'Show', 'odwpasp' )
                 );
                 echo <<<EOC
