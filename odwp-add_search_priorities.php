@@ -289,7 +289,7 @@ if( !function_exists( 'odwpasp_render_admin_page' ) ) :
                     esc_html__( 'Type', 'odwpasp' ),
                     $result['type'],
                     $status,
-                    esc_url( get_page_by_title( $pid ) ),
+                    esc_url( get_page_by_title( $result['post_ID'] ) ),
                     esc_html__( 'Show', 'odwpasp' )
                 );
                 echo <<<EOC
