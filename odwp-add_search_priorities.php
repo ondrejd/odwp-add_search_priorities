@@ -3,7 +3,7 @@
  * Plugin Name: Customize search results order
  * Plugin URI: https://github.com/ondrejd/odwp-add_search_priorities
  * Description: Plugin which customizes order of search results by additional priority value. It supports plain <a href="https://wordpress.org" target="blank">WordPress</a> as well as plugin <a href="https://www.relevanssi.com/" target="blank">Relevanssi</a>.
- * Version: 1.2
+ * Version: 1.2.1
  * Author: Ondřej Doněk
  * Author URI: https://ondrejd.com/
  * License: GPLv3
