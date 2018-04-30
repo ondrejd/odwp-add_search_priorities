@@ -6,7 +6,7 @@ _Českou verzi najdete zde [README.cs.md][4]._
 
 The main part of the plugin is new administration page (__Admin__ -> __Tools__ -> __Search priorities__) where you can set priority to single pages or posts. Items with higher priority will be shown on top of search results listing.
 
-Screencast with usage of the plugin can be found in [this post][5] on my blog.
+Screencast with usage of the plugin can be found in [this post][5] and [this newer post][6] on my blog.
 
 ## Donations
 
@@ -27,3 +27,4 @@ As you can see on image below setting priorities is really easy:
 [3]:https://www.paypal.me/ondrejd
 [4]:README.cs.md
 [5]:https://ondrejd.com/en/wordpress-changing-of-priority-of-search-results/
+[6]:https://ondrejd.com/en/plugin-customize-search-results-order/

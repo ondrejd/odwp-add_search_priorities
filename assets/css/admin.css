@@ -41,6 +41,10 @@
 .odwpasp #odwpasp-search_term, .odwpasp select { min-height:2em; }
 .odwpasp #odwpasp-search_term { position:relative;top:2px; }
 
+.odwpasp-priority_meta_box input[type="text"] {
+    width: 245px;
+}
+
 @media only screen and (max-width:768px) {
     .odwpasp #odwpasp-search_term { min-width:410px;padding:2px 4px;width:80%; }
     .odwpasp #odwpasp-post_status { min-width:410px;padding:2px 4px;width:80%; }

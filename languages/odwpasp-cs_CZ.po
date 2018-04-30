@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: odwp-add_search_priorities\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2018-04-28 08:35+0200\n"
+"POT-Creation-Date: 2018-04-30 20:55+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Ondřej Doněk <ondrejd@gmail.com>\n"
@@ -24,148 +24,152 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: assets\n"
 
-#: odwp-add_search_priorities.php:57 odwp-add_search_priorities.php:227
-#: odwp-add_search_priorities.php:570 odwp-add_search_priorities.php:640
+#: odwp-add_search_priorities.php:76 odwp-add_search_priorities.php:249
+#: odwp-add_search_priorities.php:613 odwp-add_search_priorities.php:683
 msgid "Firstly enter any search term…"
 msgstr "Nejprve musíte zadat hledaný termín…"
 
-#: odwp-add_search_priorities.php:58
+#: odwp-add_search_priorities.php:77
 msgid "Searching…"
 msgstr "Hledám…"
 
-#: odwp-add_search_priorities.php:59
+#: odwp-add_search_priorities.php:78
 msgid "There was an error so search can not be completed…"
 msgstr "Vyskytla se chyba a vyhledávání nemohlo být dokončeno…"
 
-#: odwp-add_search_priorities.php:60 odwp-add_search_priorities.php:244
-#: odwp-add_search_priorities.php:285
+#: odwp-add_search_priorities.php:79 odwp-add_search_priorities.php:266
+#: odwp-add_search_priorities.php:307
 msgid "Save priorities"
 msgstr "Uložit priority"
 
-#: odwp-add_search_priorities.php:61 odwp-add_search_priorities.php:247
+#: odwp-add_search_priorities.php:80 odwp-add_search_priorities.php:269
 #, php-format
 msgid "Results count: %1$d"
 msgstr "Počet výsledků: %1$d"
 
-#: odwp-add_search_priorities.php:62 odwp-add_search_priorities.php:254
+#: odwp-add_search_priorities.php:81 odwp-add_search_priorities.php:276
 msgid "Index"
 msgstr "Pořadí"
 
-#: odwp-add_search_priorities.php:63 odwp-add_search_priorities.php:255
+#: odwp-add_search_priorities.php:82 odwp-add_search_priorities.php:277
 msgid "Search result"
 msgstr "Výsledek vyhledávání"
 
-#: odwp-add_search_priorities.php:64 odwp-add_search_priorities.php:256
+#: odwp-add_search_priorities.php:83 odwp-add_search_priorities.php:278
 msgid "Priority"
 msgstr "Priorita"
 
-#: odwp-add_search_priorities.php:65 odwp-add_search_priorities.php:262
+#: odwp-add_search_priorities.php:84 odwp-add_search_priorities.php:284
 msgid "Status"
 msgstr "Stav"
 
-#: odwp-add_search_priorities.php:66 odwp-add_search_priorities.php:266
+#: odwp-add_search_priorities.php:85 odwp-add_search_priorities.php:288
 msgid "ID"
 msgstr "ID"
 
-#: odwp-add_search_priorities.php:67 odwp-add_search_priorities.php:268
+#: odwp-add_search_priorities.php:86 odwp-add_search_priorities.php:290
 msgid "Type"
 msgstr "Typ"
 
-#: odwp-add_search_priorities.php:68 odwp-add_search_priorities.php:272
+#: odwp-add_search_priorities.php:87 odwp-add_search_priorities.php:294
 msgid "Show"
 msgstr "Zobrazit"
 
-#: odwp-add_search_priorities.php:69
+#: odwp-add_search_priorities.php:88
 msgid "Updating priorities…"
 msgstr "Aktualizuji priority…"
 
-#: odwp-add_search_priorities.php:94 odwp-add_search_priorities.php:183
+#: odwp-add_search_priorities.php:113 odwp-add_search_priorities.php:205
 msgid "Customize search results order"
 msgstr "Úprava pořadí výsledků vyhledávání"
 
-#: odwp-add_search_priorities.php:95
+#: odwp-add_search_priorities.php:114
 msgid "Customize search"
 msgstr "Upravit vyhledávání"
 
-#: odwp-add_search_priorities.php:155
+#: odwp-add_search_priorities.php:175
 msgid "You have incuffient permissions for accessing this page."
 msgstr "Pro přístup k této stránce nemáte dostatečná oprávnění."
 
-#: odwp-add_search_priorities.php:187 odwp-add_search_priorities.php:566
-#: odwp-add_search_priorities.php:620
+#: odwp-add_search_priorities.php:209 odwp-add_search_priorities.php:609
+#: odwp-add_search_priorities.php:663
 msgid "Request was not processed correctly, something wrong with security…"
 msgstr "Žádost nebyla správně zpracována, něco špatného z bezpečností…"
 
-#: odwp-add_search_priorities.php:191
+#: odwp-add_search_priorities.php:213
 msgid "Test search"
 msgstr "Testovací vyhledávání"
 
-#: odwp-add_search_priorities.php:197
+#: odwp-add_search_priorities.php:219
 msgid "Search term: "
 msgstr "Hledaný termín:"
 
-#: odwp-add_search_priorities.php:198
+#: odwp-add_search_priorities.php:220
 msgid "Enter search term..."
 msgstr "Zadejte hledaný termín…"
 
-#: odwp-add_search_priorities.php:201
+#: odwp-add_search_priorities.php:223
 msgid "Post status: "
 msgstr "Stav příspěvku:"
 
-#: odwp-add_search_priorities.php:203
+#: odwp-add_search_priorities.php:225
 msgid "Published only"
 msgstr "Pouze publikované"
 
-#: odwp-add_search_priorities.php:204
+#: odwp-add_search_priorities.php:226
 msgid "Published + Drafts"
 msgstr "Publikované + Koncepty"
 
-#: odwp-add_search_priorities.php:205
+#: odwp-add_search_priorities.php:227
 msgid "Private"
 msgstr "Soukromé"
 
-#: odwp-add_search_priorities.php:206 odwp-add_search_priorities.php:215
+#: odwp-add_search_priorities.php:228 odwp-add_search_priorities.php:237
 msgid "All"
 msgstr "Všechny"
 
-#: odwp-add_search_priorities.php:210
+#: odwp-add_search_priorities.php:232
 msgid "Rows: "
 msgstr "Řádků: "
 
-#: odwp-add_search_priorities.php:212
+#: odwp-add_search_priorities.php:234
 msgid "25"
 msgstr "25"
 
-#: odwp-add_search_priorities.php:213
+#: odwp-add_search_priorities.php:235
 msgid "50"
 msgstr "50"
 
-#: odwp-add_search_priorities.php:214
+#: odwp-add_search_priorities.php:236
 msgid "100"
 msgstr "100"
 
-#: odwp-add_search_priorities.php:219
+#: odwp-add_search_priorities.php:241
 msgid "Search"
 msgstr "Vyhledat"
 
-#: odwp-add_search_priorities.php:220
+#: odwp-add_search_priorities.php:242
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: odwp-add_search_priorities.php:232 odwp-add_search_priorities.php:574
-#: odwp-add_search_priorities.php:644
+#: odwp-add_search_priorities.php:254 odwp-add_search_priorities.php:617
+#: odwp-add_search_priorities.php:687
 msgid "No posts or pages found…"
 msgstr "Nebyly nalezeny žádné stránky ani příspěvky…"
 
-#: odwp-add_search_priorities.php:443
+#: odwp-add_search_priorities.php:465
 msgid "Search order priority"
 msgstr "Priorita řazení"
 
-#: odwp-add_search_priorities.php:466
+#: odwp-add_search_priorities.php:507
 msgid "Priority:"
 msgstr "Priorita:"
 
-#: odwp-add_search_priorities.php:624
+#: odwp-add_search_priorities.php:509
+msgid "Set numeric value."
+msgstr "Zadejte číselnou hodnotu."
+
+#: odwp-add_search_priorities.php:667
 msgid "No priorities - nothing to save…"
 msgstr "Žádné priority nebyly odeslány - nic nebylo uloženo…"
 

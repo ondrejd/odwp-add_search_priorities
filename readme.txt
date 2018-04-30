@@ -5,7 +5,7 @@ Tags: search,meta box
 Requires at least: 4.8
 Tested up to: 4.9.5
 Requires PHP: 5.2.4
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
  
@@ -23,8 +23,8 @@ Screencast with usage of the plugin can be found in [this post](https://ondrejd.
  
 This section describes how to install the plugin and get it working.
  
-1. Upload `odwp-add_search_priorities.zip` to the `/wp-content/plugins/` directory
-2. Unpack ZIP archive (so new `odwp-add_search_priorities` directory is created)
+1. Upload `customize-search-results-order[VERSION].zip` to the `/wp-content/plugins/` directory
+2. Unpack ZIP archive (so new `customize-search-results-order` directory is created)
 3. Activate the plugin through the 'Plugins' menu in WordPress
  
 == Screenshots ==
@@ -33,6 +33,10 @@ This section describes how to install the plugin and get it working.
 2. Another screen of plugin's admin screen
  
 == Changelog ==
+
+= 1.2.2 =
+* Fixed nasty bug in post's priority meta box
+* Changed priority of our meta box (there is no reason to show it as the first)
 
 = 1.2.1 =
 * Some code fixes because of publishing on __WordPress Plugins Directory__

@@ -464,11 +464,30 @@ if( !function_exists( 'odwpasp_register_meta_boxes' ) ) :
             'odwpasp-priority_metabox',
             __( 'Search order priority', 'odwpasp' ),
             'odwpasp_priority_metabox_render',
-            ['page', 'post'], 'side', 'high'
+            ['page', 'post'],
+            'side',
+            'default'
         );
     }
 endif;
-add_action( 'add_meta_boxes', 'odwpasp_register_meta_boxes' );
+
+
+if( !function_exists( 'odwpasp_init_metabox' ) ) :
+    /**
+     * Initializes metaboxes.
+     * @return void
+     * @since 1.2.1
+     */
+    function odwpasp_init_metabox() {
+        add_action( 'add_meta_boxes', 'odwpasp_register_meta_boxes' );
+        add_action( 'post_updated', 'odwpasp_priority_metabox_save', 99, 2 );
+    }
+endif;
+
+if( is_admin() ) {
+    add_action( 'load-post.php', 'odwpasp_init_metabox' );
+    add_action( 'load-post-new.php', 'odwpasp_init_metabox' );
+}
 
 
 if( !function_exists( 'odwpasp_priority_metabox_render' ) ) :
@@ -484,9 +503,10 @@ if( !function_exists( 'odwpasp_priority_metabox_render' ) ) :
         wp_nonce_field( ODWPASP_NONCE );
 
 ?>
-<p>
+<p class="odwpasp-priority_meta_box">
     <label for="odwpasp-priority"><?php esc_html_e( 'Priority:', 'odwpasp' ) ?></label>
-    <input class="short-text" id="odwpasp-priority" name="odwpasp-priority" type="text" value="<?php echo esc_attr( $priority ) ?>">
+    <input class="form-input" id="odwpasp-priority" name="odwpasp-priority" type="text" value="<?php echo esc_attr( $priority ) ?>">
+    <span class="description"><?php esc_html_e( 'Set numeric value.', 'odwpasp' )?></span>
 </p>
 <?php
     }
@@ -497,7 +517,8 @@ if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
     /**
      * Save meta box content.
      * @param int $post_id
-     * @param WP_Post $post
+     * @param \WP_Post $post_after
+     * @param \WP_Post $post_before
      * @return void
      * @since 1.0.0
      * @uses current_user_can()
@@ -505,7 +526,7 @@ if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
      * @uses update_post_meta()
      * 
      */
-    function odwpasp_priority_metabox_save( $post_id, $post ) {
+    function odwpasp_priority_metabox_save( $post_id, \WP_Post $post_after, \WP_Post $post_before ) {
 
         if( !current_user_can( 'edit_post', $post_id ) ) {
             return $post_id;
@@ -515,16 +536,16 @@ if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
             return $post_id;
         }
 
-        if( 'post' != $post->post_type && 'page' != $post->post_type ) {
+        if( 'post' != $post_after->post_type && 'page' != $post_after->post_type ) {
             return $post_id;
         }
 
-        $nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
+        /*$nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
         $is_valid_nonce = wp_verify_nonce( $nonce, ODWPASP_NONCE );
 
         if( !$is_valid_nonce ) {
             return $post_id;
-        }
+        }*/
 
         $priority = filter_input( INPUT_POST, 'odwpasp-priority', FILTER_VALIDATE_INT );
 
@@ -535,7 +556,6 @@ if( !function_exists( 'odwpasp_priority_metabox_save' ) ) :
         return $post_id;
     }
 endif;
-add_action( 'save_post', 'odwpasp_priority_metabox_save', 99, 2 );
 
 
 if( !function_exists( 'odwpasp_load_textdomain' ) ) :

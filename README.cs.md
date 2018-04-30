@@ -6,7 +6,7 @@ Plugin pro [WordPress][1], který upravuje řazení výsledků vyhledávání dl
 
 Hlavní součástí je nová podstránka v administraci (__Admin__ -> __Nástroje__ -> __Úprava vyhledávání__), kde můžete nastavit váhu jednotlivým stránkám a příspěvkům. Položky s větší váhou budou přednostně zobrazeny na stránce s výskedy vyhledávání.
 
-Video z použití můžete najít v [tomto příspěvku][5] na mém blogu.
+Video z použití můžete najít v [tomto příspěvku][5] a [tomto novějším příspěvku][6] na mém blogu.
 
 ## Dárcovství
 
@@ -27,3 +27,4 @@ Jak vidíte na obrázku níže, nastavení priorit je opravdu snadné:
 [3]:https://www.paypal.me/ondrejd
 [4]:README.md
 [5]:https://ondrejd.com/uprava-zobrazeni-vysledku-vyhledavani/
+[6]:https://ondrejd.com/plugin-uprava-razeni-vysledku-vyhledavani/
